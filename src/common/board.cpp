@@ -4,6 +4,8 @@
 #include <vector>
 #include "exceptions.h"
 
+using namespace zeno;
+
 const int Board::NUM_POSITIONS=24;
 
 Board::Board() :
@@ -38,10 +40,13 @@ int Board::getPosition(int pos) {
 
 bool Board::moveChecker(int initialPos, bool positivePlayer, int numPositions) {
   if (!isMoveLegal(initialPos, positivePlayer, numPositions) ) {
-    throw bg::IllegalMoveException();
+    throw zeno::IllegalMoveException();
   }
+
+  return true;
 }
 
 bool Board::isMoveLegal(int initialPos, bool positivePlayer,  int numPositions) {
 
+  return true;
 }

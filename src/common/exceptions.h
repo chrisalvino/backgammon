@@ -2,11 +2,13 @@
 #ifndef EXCEPTIONS_H__
 #define EXCEPTIONS_H__
 
-namespace bg {
+#include <exception>
 
-  class IllegalMoveException : public Exception {
+namespace zeno {
+
+  class IllegalMoveException : public std::exception {
     
-  }
+  };
 
 }
 
