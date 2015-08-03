@@ -5,12 +5,12 @@ LDFLAGS = -lm
 LD = ld
 
 # define the C source files
-SRCS = board.cpp
+OBJS = board.o game.o evaluation.o randomplayer.o
 
-OBJS = $(SRCS:.cpp=.o)
+SRCS = $(OBJS:.o=.cpp)
 
 common.o: ${OBJS} 
-	$(LD) -arch x86_64 -r -o $@ $<
+	$(LD) -arch x86_64 -r -o $@ $^
 
 #
 # The following part of the makefile is generic; it can be used to 
@@ -18,15 +18,18 @@ common.o: ${OBJS}
 # deleting dependencies appended to the file from 'make depend'
 #
 
-.PHONY: depend clean
+.PHONY: clean
 
 clean:
-	$(RM) *.o *~ $(MAIN)
+	$(RM) *.o *.d *~ $(MAIN)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
+	$(CC) -MM $(CFLAGS) $*.cpp > $*.d
+	@mv -f $*.d $*.d.tmp
+	@sed -e 's|.*:|$*.o:|' < $*.d.tmp > $*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+	    sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+	@rm -f $*.d.tmp	
 
-depend: $(SRCS)
-	makedepend $(INCLUDES) $^	
-
-# DO NOT DELETE THIS LINE -- make depend needs it
+-include $(OBJS:.o=.d)

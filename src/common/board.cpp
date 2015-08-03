@@ -8,20 +8,32 @@ using namespace zeno;
 
 const int Board::NUM_POSITIONS=24;
 
-Board::Board() :
-  m_numPositiveOnBar(0),
-  m_numNegativeOnBar(0),
-  m_numPositiveBornOff(0),
-  m_numNegativeBornOff(0)
-{
+Board::Board() {
   m_board.resize(NUM_POSITIONS); 
   for(int i=0;i<NUM_POSITIONS;++i) {
     m_board[i] = 0;
   }
+
+  this->reset();
 }
 
 Board::~Board() {
 
+}
+
+void Board::reset() {
+  m_board[0] = -2;
+  m_board[5] = 5;
+  m_board[7] = 3;
+  m_board[11] = -5;
+  m_board[12] = 5;
+  m_board[16] = -3;
+  m_board[18] = -5;
+  m_board[23] = 2;
+  m_numPositiveOnBar = 0;
+  m_numNegativeOnBar = 0;
+  m_numPositiveBornOff = 0;
+  m_numNegativeBornOff = 0;
 }
 
 Board::Board(const Board &rhs) :

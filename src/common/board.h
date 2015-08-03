@@ -18,6 +18,7 @@ namespace zeno {
       Board & operator=(const Board &rhs);
     
      public:
+      void reset();
       int getPosition(int pos);
       bool moveChecker(int initialPos, bool positivePlayer,  int numPositions);
       bool isMoveLegal(int initialPos, bool positivePlayer,  int numPositions);

@@ -7,7 +7,7 @@
 namespace zeno {
 
   class IllegalMoveException : public std::exception {
-    
+      
   };
 
 }
