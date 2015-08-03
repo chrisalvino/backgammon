@@ -17,10 +17,15 @@ Game::~Game() {
 }
 
 void Game::startNewGame() {
-	m_Player1sTurn = true;
+
+	// reset board
 	m_Board.reset();
+
+	// roll dice to decide who goes first
+	
+
 }
 
 void Game::move() {
-	
+
 }

@@ -1,18 +1,16 @@
 
-DIRS = common
 CC = g++
 CFLAGS = -Wall -Werror -g
 LDFLAGS = -lm
+LD = ld
 
-
-# define the C source files
-SRCS = board.cpp
-
+DIRS = common
 MAIN = zeno
 
-OBJS = $(SRCS:.cpp=.o)
+# define the C source files
+OBJS = main.o common.o
 
-LIB1 = common
+SRCS = $(OBJS:.o=.cpp)
 
 #
 # The following part of the makefile is generic; it can be used to 
@@ -20,16 +18,17 @@ LIB1 = common
 # deleting dependencies appended to the file from 'make depend'
 #
 
+$(MAIN): ${OBJS}
+	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
+
 .PHONY: depend clean common
 
-common:
+common.o:
 	cd common && $(MAKE)
+	cp common/common.o .
 
 all: $(MAIN)
 	@echo  Simple compiler named mycc has been compiled
-
-$(MAIN): $(OBJS) 
-	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
 clean:
 	-$(RM) -f $(MAIN) $(OBJS)

@@ -4,6 +4,7 @@
 
 #include "board.h"
 #include "player.h"
+#include "die.h"
 
 namespace zeno {
 
@@ -25,6 +26,7 @@ namespace zeno {
 		Board m_Board;
 		Player *m_player1;
 		Player *m_player2;
+		Die *m_die;
 
 	private:
 		Game(const Game & rhs);
