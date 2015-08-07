@@ -5,7 +5,7 @@ LDFLAGS = -lm
 LD = ld
 
 # define the C source files
-OBJS = board.o game.o evaluation.o randomplayer.o
+OBJS = board.o game.o evaluation.o randomplayer.o defaultdie.o die.o
 
 SRCS = $(OBJS:.o=.cpp)
 
