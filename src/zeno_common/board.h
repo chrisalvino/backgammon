@@ -24,12 +24,14 @@
     
   public:
     void reset();
-    int getPosition(int pos);
+    int getPosPlayerCheckers(int position) { return m_boardPos[position]; }
+    int getNegPlayerCheckers(int position) { return m_boardNeg[position]; }
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
     
   private:
-    std::vector<int> m_board;
+    std::vector<int> m_boardPos;
+    std::vector<int> m_boardNeg;
     static const int NUM_POSITIONS;
   };
 

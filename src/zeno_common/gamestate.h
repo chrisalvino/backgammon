@@ -18,6 +18,13 @@ namespace zeno {
 
 		GameState & operator=(const GameState &rhs);
 
+		const Board & getBoard() const { return m_board; }
+
+		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER_INDEX); }
+
+		static const unsigned int POS_PLAYER_INDEX;
+		static const unsigned int NEG_PLAYER_INDEX;
+
 	private:
 		Board m_board;
 		std::vector<unsigned int> m_dice;
@@ -29,8 +36,6 @@ namespace zeno {
 		bool m_cubeCentered;
 		unsigned int m_cubeOwner;
 
-		static const unsigned int POS_PLAYER_INDEX;
-		static const unsigned int NEG_PLAYER_INDEX;
 
 	// may include the state below at a later point
 	// but not doing it now for simplicity

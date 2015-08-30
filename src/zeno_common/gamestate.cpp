@@ -13,6 +13,7 @@ GameState::GameState() {
 	m_score.resize(2);
 	m_score[POS_PLAYER_INDEX] = 0;
 	m_score[NEG_PLAYER_INDEX] = 0;
+	m_playerOnTurn = POS_PLAYER_INDEX;
 }
 
 GameState::~GameState() {
