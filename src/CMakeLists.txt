@@ -13,7 +13,6 @@ project (zeno)
 set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory (zeno_common)
-
 include_directories (zeno_common)
 
 add_executable(zeno $<TARGET_OBJECTS:zeno_common> main.cpp)

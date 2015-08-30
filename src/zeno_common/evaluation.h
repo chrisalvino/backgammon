@@ -22,7 +22,7 @@ namespace zeno {
 		double getLoseGammonProbability() { return m_loseGammonProbability; }
 		double getLoseBackgammonProbability() { return m_loseBackgammonProbability; }
 
-		double getMoneyGameEquity();
+		double getMoneyGameEquity(int gameStakes);
 
 	private:
 		double m_winProbability;

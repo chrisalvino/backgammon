@@ -4,33 +4,34 @@
 
 #include <vector>
 
-namespace zeno {
+/*
+ * Class intended to represent the checkers only!
+ * The rest of the game state is in the GameState class.
+ */
 
-    class Board {
+ namespace zeno {
+
+  class Board {
+
+  public:
+    Board();
     
-     public:
-      Board();
+    ~Board();
     
-      ~Board();
+    Board(const Board &rhs);
     
-      Board(const Board &rhs);
+    Board & operator=(const Board &rhs);
     
-      Board & operator=(const Board &rhs);
+  public:
+    void reset();
+    int getPosition(int pos);
+    bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
+    bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
     
-     public:
-      void reset();
-      int getPosition(int pos);
-      bool moveChecker(int initialPos, bool positivePlayer,  int numPositions);
-      bool isMoveLegal(int initialPos, bool positivePlayer,  int numPositions);
-    
-     private:
-      std::vector<int> m_board;
-      static const int NUM_POSITIONS;
-      int m_numPositiveOnBar;
-      int m_numNegativeOnBar;
-      int m_numPositiveBornOff;
-      int m_numNegativeBornOff;
-    };
+  private:
+    std::vector<int> m_board;
+    static const int NUM_POSITIONS;
+  };
 
 }
 

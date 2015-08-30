@@ -6,7 +6,7 @@
 
 using namespace zeno;
 
-const int Board::NUM_POSITIONS=24;
+const int Board::NUM_POSITIONS=25;  // 25 positions, 0 to 23 are on the board, 24 is bar
 
 Board::Board() {
   m_board.resize(NUM_POSITIONS); 
@@ -30,20 +30,22 @@ void Board::reset() {
   m_board[16] = -3;
   m_board[18] = -5;
   m_board[23] = 2;
-  m_numPositiveOnBar = 0;
-  m_numNegativeOnBar = 0;
-  m_numPositiveBornOff = 0;
-  m_numNegativeBornOff = 0;
 }
 
 Board::Board(const Board &rhs) :
-  m_board(rhs.m_board),
-  m_numPositiveOnBar(rhs.m_numPositiveOnBar),
-  m_numNegativeOnBar(rhs.m_numNegativeOnBar),
-  m_numPositiveBornOff(rhs.m_numPositiveBornOff),
-  m_numNegativeBornOff(rhs.m_numNegativeBornOff)
+  m_board(rhs.m_board)
 {
   
+}
+
+Board & Board::operator=(const Board &rhs) {
+  if (this == &rhs) {
+    return *this;
+  }
+
+  this->m_board = rhs.m_board;
+
+  return *this;
 }
 
 int Board::getPosition(int pos) {

@@ -19,11 +19,13 @@ Evaluation::~Evaluation() {
 
 }
 
-double Evaluation::getMoneyGameEquity() {
-	return m_winProbability 
-	+ m_winGammonProbability
-	+ m_winBackgammonProbability
-	- (1.0 - m_winProbability)
-	- m_loseGammonProbability
-	- m_loseBackgammonProbability;
+double Evaluation::getMoneyGameEquity(int gameStakes) {
+	return (
+		m_winProbability 
+		+ m_winGammonProbability
+		+ m_winBackgammonProbability
+		- (1.0 - m_winProbability)
+		- m_loseGammonProbability
+		- m_loseBackgammonProbability
+		) * gameStakes;
 }
