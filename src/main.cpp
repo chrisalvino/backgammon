@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "common/defaultdie.h"
+#include "zeno_common/defaultdie.h"
 #include <iostream>
 
 #include <vector>
