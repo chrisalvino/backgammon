@@ -20,6 +20,10 @@ namespace zeno {
 
 		const Board & getBoard() const { return m_board; }
 
+		void initializeBackgammon();
+		void initializeNackgammon();
+		void initializeHypergammon();
+
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER_INDEX); }
 
 		static const unsigned int POS_PLAYER_INDEX;

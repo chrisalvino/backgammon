@@ -3,6 +3,7 @@
 #define BOARD_H__
 
 #include <vector>
+#include "gametype.h"
 
 /*
  * Class intended to represent the checkers only!
@@ -14,7 +15,7 @@
   class Board {
 
   public:
-    Board();
+    Board(GameType gametype=GameType::BACKGAMMON);
     
     ~Board();
     
@@ -23,12 +24,17 @@
     Board & operator=(const Board &rhs);
     
   public:
-    void reset();
+    void setUpBackgammonCheckers();
+    void setUpNackgammonCheckers();
+    void setUpHypergammonCheckers();
     int getPosPlayerCheckers(int position) const { return m_boardPos[position]; }
     int getNegPlayerCheckers(int position) const { return m_boardNeg[position]; }
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
-    
+     
+  private:
+    void clearBoard();
+
   private:
     std::vector<int> m_boardPos;
     std::vector<int> m_boardNeg;

@@ -48,3 +48,16 @@ GameState & GameState::operator=(const GameState &rhs) {
 
 	return *this;
 }
+
+void GameState::initializeBackgammon() {
+	m_board.setUpBackgammonCheckers();
+}
+
+void GameState::initializeNackgammon() {
+	m_board.setUpNackgammonCheckers();
+}
+
+void GameState::initializeHypergammon() {
+	m_board.setUpHypergammonCheckers();
+}
+

@@ -19,7 +19,7 @@ Game::~Game() {
 void Game::startNewGame() {
 
 	// reset board
-	m_Board.reset();
+	m_Board.setUpNackgammonCheckers();
 
 	// roll dice to decide who goes first
 	
