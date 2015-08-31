@@ -33,6 +33,48 @@ TerminalDisplay::~TerminalDisplay() {
 //  +12-11-10--9--8--7-------6--5--4--3--2--1-+     X: Gary (Cube: 2)
 // 
 // 
+
+void checkerDisplay(
+	const Board & board,
+	int yCur,
+	int xCur,
+	int yMax,
+	bool posPlayerOnBottom,
+	const std::vector<char> &extraCheckers,
+	std::ostream &outStream
+	) {
+
+	outStream << " ";
+
+	int posx;
+	int negx;
+	if (posPlayerOnBottom) {
+		posx = xCur-1;
+		negx = (25-xCur)-1;
+	} else {
+		posx = (25-xCur)-1;
+		negx = xCur-1;
+	}
+
+	if (board.getPosPlayerCheckers(posx) >= yCur) {
+		if (yCur == yMax && board.getPosPlayerCheckers(posx) > yMax) {
+			outStream << extraCheckers[board.getPosPlayerCheckers(posx)];
+		} else {
+			outStream << "X";
+		}
+	} else if (board.getNegPlayerCheckers(negx) >= yCur) {
+		if (yCur == yMax && board.getNegPlayerCheckers(negx) > yMax) {
+			outStream << extraCheckers[board.getNegPlayerCheckers(negx)];
+		} else {
+			outStream << "O";
+		}
+	} else {
+		outStream << " ";
+	}
+
+	outStream << " ";
+}
+
 void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outStream) {
 
 	Board board = gameState.getBoard();
@@ -40,7 +82,7 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 
 	char leftSideCharacter = '|';
 	char rightSideCharacter = '|';
-	char extraCheckers[16] = "123456789ABCDEF";
+	std::vector<char> extraCheckers = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
 	outStream << " +13-14-15-16-17-18------19-20-21-22-23-24-+ ";
 	outStream << std::endl;
@@ -52,62 +94,14 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 		outStream << leftSideCharacter;
 
 		for (int x=13;x<=18;x++) {
-			outStream << " ";
-
-			int posx;
-			int negx;
-			if (posPlayerOnBottom) {
-				posx = x-1;
-				negx = 24-x;
-			} else {
-				posx = 24-x;
-				negx = x-1;
-			}
-
-			if (board.getPosPlayerCheckers(posx) >= ytop) {
-				if (ytop == ymax && board.getPosPlayerCheckers(posx) > ymax) {
-					outStream << extraCheckers[board.getPosPlayerCheckers(posx)];
-				} else {
-					outStream << "X";
-				}
-			} else if (board.getNegPlayerCheckers(negx) >= ytop) {
-				if (ytop == ymax && board.getNegPlayerCheckers(negx) > ymax) {
-					outStream << extraCheckers[board.getNegPlayerCheckers(negx)];
-				} else {
-					outStream << "O";
-				}
-			} else {
-				outStream << " ";
-			}
-
-			outStream << " ";
+			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
 		}
 
 		// eventually checkers on the bar will go here
 		outStream << rightSideCharacter << "   " << leftSideCharacter;
 
 		for (int x=19;x<=24;x++) {
-			outStream << " ";
-
-			int posx;
-			int negx;
-			if (posPlayerOnBottom) {
-				posx = x-1;
-				negx = 24-x;
-			} else {
-				posx = 24-x;
-				negx = x-1;
-			}
-
-			if (board.getPosPlayerCheckers(posx) >= ytop) {
-				outStream << "X";
-			} else if (board.getNegPlayerCheckers(negx) >= ytop) {
-				outStream << "O";
-			} else {
-				outStream << " ";
-			}
-
-			outStream << " ";
+			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
 		}
 
 		outStream << rightSideCharacter;
@@ -125,59 +119,19 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 	outStream << rightSideCharacter;
 	outStream << std::endl;
 
-	for (int ybottom=5;ybottom>=1;ybottom--) {
+	for (int ybottom=ymax;ybottom>=ymin;ybottom--) {
 		outStream << " ";
 		outStream << leftSideCharacter;
 
 		for (int x=12;x>=7;x--) {
-			outStream << " ";
-
-			int posx;
-			int negx;
-			if (posPlayerOnBottom) {
-				posx = x-1;
-				negx = 24-x;
-			} else {
-				posx = 24-x;
-				negx = x-1;
-			}
-
-			if (board.getPosPlayerCheckers(posx) >= ybottom) {
-				outStream << "X";
-			} else if (board.getNegPlayerCheckers(negx) >= ybottom) {
-				outStream << "O";
-			} else {
-				outStream << " ";
-			}
-
-			outStream << " ";
+			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
 		}
 
 		// eventually checkers on the bar will go here
 		outStream << "|   |";
 
 		for (int x=6;x>=1;x--) {
-			outStream << " ";
-
-			int posx;
-			int negx;
-			if (posPlayerOnBottom) {
-				posx = x-1;
-				negx = 24-x;
-			} else {
-				posx = 24-x;
-				negx = x-1;
-			}
-
-			if (board.getPosPlayerCheckers(posx) >= ybottom) {
-				outStream << "X";
-			} else if (board.getNegPlayerCheckers(negx) >= ybottom) {
-				outStream << "O";
-			} else {
-				outStream << " ";
-			}
-
-			outStream << " ";
+			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
 		}
 
 		outStream << rightSideCharacter;

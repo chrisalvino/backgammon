@@ -33,7 +33,7 @@ void Board::reset() {
 
   // the negative player moves downward too, from 23 down to 0 and then off
   // this means that position X for the positive player is the same as position
-  // 
+  // 25-X for the negative player
   m_boardNeg[5] = 5;
   m_boardNeg[7] = 3;
   m_boardNeg[12] = 5;
@@ -42,8 +42,7 @@ void Board::reset() {
 
 Board::Board(const Board &rhs) :
   m_boardPos(rhs.m_boardPos),
-  m_boardNeg(rhs.m_boardNeg)
-{
+  m_boardNeg(rhs.m_boardNeg) {
   
 }
 

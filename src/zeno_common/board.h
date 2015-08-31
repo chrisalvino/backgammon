@@ -24,8 +24,8 @@
     
   public:
     void reset();
-    int getPosPlayerCheckers(int position) { return m_boardPos[position]; }
-    int getNegPlayerCheckers(int position) { return m_boardNeg[position]; }
+    int getPosPlayerCheckers(int position) const { return m_boardPos[position]; }
+    int getNegPlayerCheckers(int position) const { return m_boardNeg[position]; }
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
     
