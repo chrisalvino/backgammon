@@ -14,14 +14,14 @@ Board::Board(GameType gameType) {
 
   switch (gameType) {
     case BACKGAMMON:
-      this->setUpBackgammonCheckers();
-      break;
+    this->setUpBackgammonCheckers();
+    break;
     case NACKGAMMON:
-      this->setUpNackgammonCheckers();
-      break;
+    this->setUpNackgammonCheckers();
+    break;
     case HYPERGAMMON:
-      this->setUpHypergammonCheckers();
-      break;      
+    this->setUpHypergammonCheckers();
+    break;      
   }
 }
 
@@ -91,9 +91,9 @@ void Board::setUpHypergammonCheckers() {
 }
 
 Board::Board(const Board &rhs) :
-  m_boardPos(rhs.m_boardPos),
-  m_boardNeg(rhs.m_boardNeg) {
-  
+m_boardPos(rhs.m_boardPos),
+m_boardNeg(rhs.m_boardNeg) {
+
 }
 
 Board & Board::operator=(const Board &rhs) {

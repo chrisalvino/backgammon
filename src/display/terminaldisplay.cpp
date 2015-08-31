@@ -37,7 +37,7 @@ TerminalDisplay::~TerminalDisplay() {
 void checkerDisplay(
 	const Board & board,
 	int yCur,
-	int xCur,
+	int xCur, // 25 and -25 are the bottom player and top player's bars respectively
 	int yMax,
 	bool posPlayerOnBottom,
 	const std::vector<char> &extraCheckers,
@@ -48,7 +48,12 @@ void checkerDisplay(
 
 	int posx;
 	int negx;
-	if (posPlayerOnBottom) {
+
+	// for bar checkers
+	if (xCur == 25 || xCur == -25) {
+		posx = 24;
+		negx = 24;
+	} else if (posPlayerOnBottom) {
 		posx = xCur-1;
 		negx = (25-xCur)-1;
 	} else {
@@ -56,7 +61,53 @@ void checkerDisplay(
 		negx = xCur-1;
 	}
 
-	if (board.getPosPlayerCheckers(posx) >= yCur) {
+
+	if (xCur == 25) { // bottom bar
+		if (posPlayerOnBottom) {
+			if (board.getPosPlayerCheckers(posx) >= yCur) {
+				if (yCur == yMax && board.getPosPlayerCheckers(posx) > yMax) {
+					outStream << extraCheckers[board.getPosPlayerCheckers(posx)];
+				} else {
+					outStream << "X";
+				}		
+			} else {
+				outStream << " ";
+			}
+		} else {
+			if (board.getNegPlayerCheckers(negx) >= yCur) {
+				if (yCur == yMax && board.getNegPlayerCheckers(negx) > yMax) {
+					outStream << extraCheckers[board.getNegPlayerCheckers(negx)];
+				} else {
+					outStream << "O";
+				}
+			} else {
+				outStream << " ";
+			}
+		}
+	} else if (xCur == -25) { // top bar
+		if (posPlayerOnBottom) {
+			if (board.getNegPlayerCheckers(negx) >= yCur) {
+				if (yCur == yMax && board.getNegPlayerCheckers(negx) > yMax) {
+					outStream << extraCheckers[board.getNegPlayerCheckers(negx)];
+				} else {
+					outStream << "O";
+				}		
+			}
+			else { 
+				outStream << " ";
+			}
+		} else {
+			if (board.getPosPlayerCheckers(posx) >= yCur) {
+				if (yCur == yMax && board.getPosPlayerCheckers(posx) > yMax) {
+					outStream << extraCheckers[board.getPosPlayerCheckers(posx)];
+				} else {
+					outStream << "X";
+				}				
+			} else {
+				outStream << " " ;
+			}
+		}		
+	} else if (board.getPosPlayerCheckers(posx) >= yCur) {
 		if (yCur == yMax && board.getPosPlayerCheckers(posx) > yMax) {
 			outStream << extraCheckers[board.getPosPlayerCheckers(posx)];
 		} else {
@@ -98,7 +149,9 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 		}
 
 		// eventually checkers on the bar will go here
-		outStream << rightSideCharacter << "   " << leftSideCharacter;
+		outStream << rightSideCharacter;
+		checkerDisplay(board,ytop,-25,ymax,posPlayerOnBottom,extraCheckers,outStream);
+		outStream << leftSideCharacter;
 
 		for (int x=19;x<=24;x++) {
 			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
@@ -128,7 +181,9 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 		}
 
 		// eventually checkers on the bar will go here
-		outStream << "|   |";
+		outStream << rightSideCharacter;
+		checkerDisplay(board,ybottom,25,ymax,posPlayerOnBottom,extraCheckers,outStream);
+		outStream << leftSideCharacter;
 
 		for (int x=6;x>=1;x--) {
 			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom,extraCheckers,outStream);
