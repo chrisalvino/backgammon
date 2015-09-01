@@ -38,8 +38,12 @@
 
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
+
+    int getPositivePipCount() const;
+    int getNegativePipCount() const;
      
   private:
+    static int pipCount(const std::vector<int> &checkers);
     void clearBoard();
 
   private:

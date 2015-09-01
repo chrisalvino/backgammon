@@ -60,6 +60,22 @@ int Board::getNumNegativeCheckersBornOff() const {
   return m_totalNegCheckers - getNumNegativeCheckersOnBoardOrBar();
 }
 
+int Board::pipCount(const std::vector<int> &checkers) {
+  int pipCount = 0;
+  for(int i=0;i<Board::NUM_POSITIONS;++i) {
+    pipCount += checkers[i] * (i+1);
+  }
+  return pipCount;
+}
+
+int Board::getPositivePipCount() const {
+  return pipCount(m_boardPos);
+}
+
+int Board::getNegativePipCount() const {
+  return pipCount(m_boardNeg);
+}
+
 void Board::setUpBackgammonCheckers() {
   clearBoard();
 

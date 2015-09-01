@@ -135,11 +135,15 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 	char rightSideCharacter = '|';
 	std::vector<char> extraCheckers = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 
-	outStream << " +13-14-15-16-17-18------19-20-21-22-23-24-+ ";
-	outStream << std::endl;
-
 	int positiveCheckersBornOff = board.getNumPositiveCheckersBornOff();
 	int negativeCheckersBornOff = board.getNumNegativeCheckersBornOff();
+
+    int posPipCount = board.getPositivePipCount();
+    int negPipCount = board.getNegativePipCount();
+
+	outStream << " +13-14-15-16-17-18------19-20-21-22-23-24-+ ";
+	outStream << (posPlayerOnBottom ? negPipCount : posPipCount);
+	outStream << std::endl;
 
 	int ymin = 1;
 	int ymax = 5;
@@ -239,6 +243,7 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 
 
 	outStream << " +12-11-10--9--8--7-------6--5--4--3--2--1-+ ";
+	outStream << (posPlayerOnBottom ? posPipCount : negPipCount);
 	outStream << std::endl;
 
 }
