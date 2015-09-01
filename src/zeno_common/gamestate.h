@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "board.h"
+#include "gametype.h"
 
 namespace zeno {
 
@@ -26,6 +27,8 @@ namespace zeno {
 
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER_INDEX); }
 
+		GameType getGameType() const { return m_gameType; }
+
 		static const unsigned int POS_PLAYER_INDEX;
 		static const unsigned int NEG_PLAYER_INDEX;
 
@@ -39,6 +42,7 @@ namespace zeno {
 		bool m_isDoubled;
 		bool m_cubeCentered;
 		unsigned int m_cubeOwner;
+		GameType m_gameType;
 
 
 	// may include the state below at a later point

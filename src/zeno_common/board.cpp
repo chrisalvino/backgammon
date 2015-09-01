@@ -36,6 +36,30 @@ void Board::clearBoard() {
   }
 }
 
+int Board::getNumPositiveCheckersOnBoardOrBar() const {
+  int posOnBoardOrBar = 0;
+  for(int i=0;i<NUM_POSITIONS;++i) {
+    posOnBoardOrBar += m_boardPos[i];
+  }
+  return posOnBoardOrBar;
+}
+
+int Board::getNumNegativeCheckersOnBoardOrBar() const {
+  int negOnBoardOrBar = 0;
+  for(int i=0;i<NUM_POSITIONS;++i) {
+    negOnBoardOrBar += m_boardNeg[i];
+  }
+  return negOnBoardOrBar;
+}
+
+int Board::getNumPositiveCheckersBornOff() const {
+  return m_totalPosCheckers - getNumPositiveCheckersOnBoardOrBar();
+}
+
+int Board::getNumNegativeCheckersBornOff() const {
+  return m_totalNegCheckers - getNumNegativeCheckersOnBoardOrBar();
+}
+
 void Board::setUpBackgammonCheckers() {
   clearBoard();
 
@@ -44,6 +68,7 @@ void Board::setUpBackgammonCheckers() {
   m_boardPos[7] = 3;
   m_boardPos[12] = 5;
   m_boardPos[23] = 2;
+  m_totalPosCheckers = 15;
 
   // the negative player moves downward too, from 23 down to 0 and then off
   // this means that position X for the positive player is the same as position
@@ -52,6 +77,7 @@ void Board::setUpBackgammonCheckers() {
   m_boardNeg[7] = 3;
   m_boardNeg[12] = 5;
   m_boardNeg[23] = 2;
+  m_totalNegCheckers = 15;
 }
 
 void Board::setUpNackgammonCheckers() {
@@ -63,6 +89,7 @@ void Board::setUpNackgammonCheckers() {
   m_boardPos[12] = 4;
   m_boardPos[22] = 2;
   m_boardPos[23] = 2;
+  m_totalPosCheckers = 15;
 
   // the negative player moves downward too, from 23 down to 0 and then off
   // this means that position X for the positive player is the same as position
@@ -72,6 +99,7 @@ void Board::setUpNackgammonCheckers() {
   m_boardNeg[12] = 4;
   m_boardNeg[22] = 2;
   m_boardNeg[23] = 2;
+  m_totalNegCheckers = 15;
 }
 
 void Board::setUpHypergammonCheckers() {
@@ -81,6 +109,7 @@ void Board::setUpHypergammonCheckers() {
   m_boardPos[21] = 1;
   m_boardPos[22] = 1;
   m_boardPos[23] = 1;
+  m_totalPosCheckers = 15;
 
   // the negative player moves downward too, from 23 down to 0 and then off
   // this means that position X for the positive player is the same as position
@@ -88,11 +117,14 @@ void Board::setUpHypergammonCheckers() {
   m_boardNeg[21] = 1;
   m_boardNeg[22] = 1;
   m_boardNeg[23] = 1;
+  m_totalNegCheckers = 15;
 }
 
 Board::Board(const Board &rhs) :
 m_boardPos(rhs.m_boardPos),
-m_boardNeg(rhs.m_boardNeg) {
+m_boardNeg(rhs.m_boardNeg),
+m_totalPosCheckers(rhs.m_totalPosCheckers),
+m_totalNegCheckers(rhs.m_totalNegCheckers) {
 
 }
 
@@ -103,6 +135,8 @@ Board & Board::operator=(const Board &rhs) {
 
   this->m_boardPos = rhs.m_boardPos;
   this->m_boardNeg = rhs.m_boardNeg;
+  this->m_totalPosCheckers = rhs.m_totalPosCheckers;
+  this->m_totalNegCheckers = rhs.m_totalNegCheckers;
 
   return *this;
 }

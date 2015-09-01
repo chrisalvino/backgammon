@@ -14,6 +14,7 @@ GameState::GameState() {
 	m_score[POS_PLAYER_INDEX] = 0;
 	m_score[NEG_PLAYER_INDEX] = 0;
 	m_playerOnTurn = POS_PLAYER_INDEX;
+	m_gameType = GameType::BACKGAMMON;
 }
 
 GameState::~GameState() {
@@ -29,7 +30,8 @@ m_numGames(rhs.m_numGames),
 m_playerOnTurn(rhs.m_playerOnTurn),
 m_isDoubled(rhs.m_isDoubled),
 m_cubeCentered(rhs.m_cubeCentered),
-m_cubeOwner(rhs.m_cubeOwner)
+m_cubeOwner(rhs.m_cubeOwner),
+m_gameType(rhs.m_gameType)
 {
 
 }
@@ -45,19 +47,23 @@ GameState & GameState::operator=(const GameState &rhs) {
 	this->m_score = rhs.m_score;
 	this->m_numGames = rhs.m_numGames;
 	this->m_playerOnTurn = rhs.m_playerOnTurn;
+	this->m_gameType = rhs.m_gameType;
 
 	return *this;
 }
 
 void GameState::initializeBackgammon() {
 	m_board.setUpBackgammonCheckers();
+	m_gameType = GameType::BACKGAMMON;
 }
 
 void GameState::initializeNackgammon() {
 	m_board.setUpNackgammonCheckers();
+	m_gameType = GameType::NACKGAMMON;
 }
 
 void GameState::initializeHypergammon() {
 	m_board.setUpHypergammonCheckers();
+	m_gameType = GameType::HYPERGAMMON;
 }
 

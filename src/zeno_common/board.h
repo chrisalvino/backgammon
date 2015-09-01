@@ -27,8 +27,15 @@
     void setUpBackgammonCheckers();
     void setUpNackgammonCheckers();
     void setUpHypergammonCheckers();
-    int getPosPlayerCheckers(int position) const { return m_boardPos[position]; }
-    int getNegPlayerCheckers(int position) const { return m_boardNeg[position]; }
+    int getPositiveCheckers(int position) const { return m_boardPos[position]; }
+    int getNegativeCheckers(int position) const { return m_boardNeg[position]; }
+
+    int getNumPositiveCheckersOnBoardOrBar() const;
+    int getNumNegativeCheckersOnBoardOrBar() const;
+
+    int getNumPositiveCheckersBornOff() const;
+    int getNumNegativeCheckersBornOff() const;
+
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
      
@@ -39,6 +46,8 @@
     std::vector<int> m_boardPos;
     std::vector<int> m_boardNeg;
     static const int NUM_POSITIONS;
+    int m_totalPosCheckers;
+    int m_totalNegCheckers;
   };
 
 }
