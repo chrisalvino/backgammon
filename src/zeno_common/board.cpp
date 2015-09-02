@@ -125,7 +125,7 @@ void Board::setUpHypergammonCheckers() {
   m_boardPos[21] = 1;
   m_boardPos[22] = 1;
   m_boardPos[23] = 1;
-  m_totalPosCheckers = 15;
+  m_totalPosCheckers = 3;
 
   // the negative player moves downward too, from 23 down to 0 and then off
   // this means that position X for the positive player is the same as position
@@ -133,7 +133,7 @@ void Board::setUpHypergammonCheckers() {
   m_boardNeg[21] = 1;
   m_boardNeg[22] = 1;
   m_boardNeg[23] = 1;
-  m_totalNegCheckers = 15;
+  m_totalNegCheckers = 3;
 }
 
 Board::Board(const Board &rhs) :

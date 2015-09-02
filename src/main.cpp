@@ -20,6 +20,8 @@ int main() {
 	GameState gameState;
 	gameState.initializeBackgammon();
 
+	
+
 	TerminalDisplay terminalDisplay;
 
 	terminalDisplay.showBoard(gameState, std::cout);
