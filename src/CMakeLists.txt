@@ -8,6 +8,7 @@ SET( CMAKE_OSX_ARCHITECTURES "x86_64" )
 # to add custom flags
 # add_definitions(${GCC_COMPILE_FLAGS})
 # SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COMPILE_FLAGS}" )
+SET( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror " )
 
 project (zeno)
 set(CMAKE_BUILD_TYPE Release)
