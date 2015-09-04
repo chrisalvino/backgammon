@@ -73,9 +73,9 @@ void TerminalDisplay::checkerDisplay(
 
 	if (xCur == 25) { // bottom bar
 		if (posPlayerOnBottom) {
-			if (board.getPositiveCheckers(posx) >= yCur) {
-				if (yCur == yMax && board.getPositiveCheckers(posx) > yMax) {
-					outStream << m_extraCheckers[board.getPositiveCheckers(posx)];
+			if (board.positiveCheckers(posx) >= yCur) {
+				if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
+					outStream << m_extraCheckers[board.positiveCheckers(posx)];
 				} else {
 					outStream << m_blackChecker;
 				}		
@@ -83,9 +83,9 @@ void TerminalDisplay::checkerDisplay(
 				outStream << " ";
 			}
 		} else {
-			if (board.getNegativeCheckers(negx) >= yCur) {
-				if (yCur == yMax && board.getNegativeCheckers(negx) > yMax) {
-					outStream << m_extraCheckers[board.getNegativeCheckers(negx)];
+			if (board.negativeCheckers(negx) >= yCur) {
+				if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
+					outStream << m_extraCheckers[board.negativeCheckers(negx)];
 				} else {
 					outStream << m_whiteChecker;
 				}
@@ -95,9 +95,9 @@ void TerminalDisplay::checkerDisplay(
 		}
 	} else if (xCur == -25) { // top bar
 		if (posPlayerOnBottom) {
-			if (board.getNegativeCheckers(negx) >= yCur) {
-				if (yCur == yMax && board.getNegativeCheckers(negx) > yMax) {
-					outStream << m_extraCheckers[board.getNegativeCheckers(negx)];
+			if (board.negativeCheckers(negx) >= yCur) {
+				if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
+					outStream << m_extraCheckers[board.negativeCheckers(negx)];
 				} else {
 					outStream << m_whiteChecker;
 				}		
@@ -106,9 +106,9 @@ void TerminalDisplay::checkerDisplay(
 				outStream << " ";
 			}
 		} else {
-			if (board.getPositiveCheckers(posx) >= yCur) {
-				if (yCur == yMax && board.getPositiveCheckers(posx) > yMax) {
-					outStream << m_extraCheckers[board.getPositiveCheckers(posx)];
+			if (board.positiveCheckers(posx) >= yCur) {
+				if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
+					outStream << m_extraCheckers[board.positiveCheckers(posx)];
 				} else {
 					outStream << m_blackChecker;
 				}				
@@ -116,15 +116,15 @@ void TerminalDisplay::checkerDisplay(
 				outStream << " ";
 			}
 		}		
-	} else if (board.getPositiveCheckers(posx) >= yCur) {
-		if (yCur == yMax && board.getPositiveCheckers(posx) > yMax) {
-			outStream << m_extraCheckers[board.getPositiveCheckers(posx)];
+	} else if (board.positiveCheckers(posx) >= yCur) {
+		if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
+			outStream << m_extraCheckers[board.positiveCheckers(posx)];
 		} else {
 			outStream << m_blackChecker;
 		}
-	} else if (board.getNegativeCheckers(negx) >= yCur) {
-		if (yCur == yMax && board.getNegativeCheckers(negx) > yMax) {
-			outStream << m_extraCheckers[board.getNegativeCheckers(negx)];
+	} else if (board.negativeCheckers(negx) >= yCur) {
+		if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
+			outStream << m_extraCheckers[board.negativeCheckers(negx)];
 		} else {
 			outStream << m_whiteChecker;
 		}
@@ -137,14 +137,14 @@ void TerminalDisplay::checkerDisplay(
 
 void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outStream) {
 
-	const Board & board = gameState.getBoard();
+	const Board & board = gameState.board();
 	bool posPlayerOnBottom = gameState.isPositivePlayerOnTurn();
 
-	int positiveCheckersBornOff = board.getNumPositiveCheckersBornOff();
-	int negativeCheckersBornOff = board.getNumNegativeCheckersBornOff();
+	int positiveCheckersBornOff = board.numPositiveCheckersBornOff();
+	int negativeCheckersBornOff = board.numNegativeCheckersBornOff();
 
-	int posPipCount = board.getPositivePipCount();
-	int negPipCount = board.getNegativePipCount();
+	int posPipCount = board.positivePipCount();
+	int negPipCount = board.negativePipCount();
 
 	outStream << " ┌13─14─15─16─17─18─┬───┬19─20─21─22─23─24─┐ ";
 	outStream << (posPlayerOnBottom ? negPipCount : posPipCount);

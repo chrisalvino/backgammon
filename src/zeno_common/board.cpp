@@ -36,7 +36,7 @@ void Board::clearBoard() {
   }
 }
 
-int Board::getNumPositiveCheckersOnBoardOrBar() const {
+int Board::numPositiveCheckersOnBoardOrBar() const {
   int posOnBoardOrBar = 0;
   for(int i=0;i<NUM_POSITIONS;++i) {
     posOnBoardOrBar += m_boardPos[i];
@@ -44,7 +44,7 @@ int Board::getNumPositiveCheckersOnBoardOrBar() const {
   return posOnBoardOrBar;
 }
 
-int Board::getNumNegativeCheckersOnBoardOrBar() const {
+int Board::numNegativeCheckersOnBoardOrBar() const {
   int negOnBoardOrBar = 0;
   for(int i=0;i<NUM_POSITIONS;++i) {
     negOnBoardOrBar += m_boardNeg[i];
@@ -52,12 +52,12 @@ int Board::getNumNegativeCheckersOnBoardOrBar() const {
   return negOnBoardOrBar;
 }
 
-int Board::getNumPositiveCheckersBornOff() const {
-  return m_totalPosCheckers - getNumPositiveCheckersOnBoardOrBar();
+int Board::numPositiveCheckersBornOff() const {
+  return m_totalPosCheckers - numPositiveCheckersOnBoardOrBar();
 }
 
-int Board::getNumNegativeCheckersBornOff() const {
-  return m_totalNegCheckers - getNumNegativeCheckersOnBoardOrBar();
+int Board::numNegativeCheckersBornOff() const {
+  return m_totalNegCheckers - numNegativeCheckersOnBoardOrBar();
 }
 
 int Board::pipCount(const std::vector<int> &checkers) {
@@ -68,11 +68,11 @@ int Board::pipCount(const std::vector<int> &checkers) {
   return pipCount;
 }
 
-int Board::getPositivePipCount() const {
+int Board::positivePipCount() const {
   return pipCount(m_boardPos);
 }
 
-int Board::getNegativePipCount() const {
+int Board::negativePipCount() const {
   return pipCount(m_boardNeg);
 }
 

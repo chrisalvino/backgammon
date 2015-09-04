@@ -19,7 +19,7 @@ Evaluation::~Evaluation() {
 
 }
 
-double Evaluation::getMoneyGameEquity(int gameStakes) {
+double Evaluation::moneyGameEquity(int gameStakes) {
 	return (
 		m_winProbability 
 		+ m_winGammonProbability

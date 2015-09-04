@@ -19,7 +19,7 @@ namespace zeno {
 
 		GameState & operator=(const GameState &rhs);
 
-		const Board & getBoard() const { return m_board; }
+		const Board & board() const { return m_board; }
 
 		void initializeBackgammon();
 		void initializeNackgammon();
@@ -27,7 +27,7 @@ namespace zeno {
 
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER_INDEX); }
 
-		GameType getGameType() const { return m_gameType; }
+		GameType gameType() const { return m_gameType; }
 
 		static const unsigned int POS_PLAYER_INDEX;
 		static const unsigned int NEG_PLAYER_INDEX;

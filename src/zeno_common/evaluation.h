@@ -16,13 +16,13 @@ namespace zeno {
 		Evaluation & operator=(const Evaluation &rhs);
 
 	public:
-		double getWinProbability() { return m_winProbability; }
-		double getGammonProbability() { return m_winGammonProbability; }
-		double getBackgammonProbability() { return m_winBackgammonProbability; }
-		double getLoseGammonProbability() { return m_loseGammonProbability; }
-		double getLoseBackgammonProbability() { return m_loseBackgammonProbability; }
+		double winProbability() { return m_winProbability; }
+		double gammonProbability() { return m_winGammonProbability; }
+		double backgammonProbability() { return m_winBackgammonProbability; }
+		double loseGammonProbability() { return m_loseGammonProbability; }
+		double loseBackgammonProbability() { return m_loseBackgammonProbability; }
 
-		double getMoneyGameEquity(int gameStakes);
+		double moneyGameEquity(int gameStakes);
 
 	private:
 		double m_winProbability;

@@ -27,20 +27,20 @@
     void setUpBackgammonCheckers();
     void setUpNackgammonCheckers();
     void setUpHypergammonCheckers();
-    int getPositiveCheckers(int position) const { return m_boardPos[position]; }
-    int getNegativeCheckers(int position) const { return m_boardNeg[position]; }
+    int positiveCheckers(int position) const { return m_boardPos[position]; }
+    int negativeCheckers(int position) const { return m_boardNeg[position]; }
 
-    int getNumPositiveCheckersOnBoardOrBar() const;
-    int getNumNegativeCheckersOnBoardOrBar() const;
+    int numPositiveCheckersOnBoardOrBar() const;
+    int numNegativeCheckersOnBoardOrBar() const;
 
-    int getNumPositiveCheckersBornOff() const;
-    int getNumNegativeCheckersBornOff() const;
+    int numPositiveCheckersBornOff() const;
+    int numNegativeCheckersBornOff() const;
 
     bool moveChecker(int initialPos, bool positivePlayer, int numPositions);
     bool isMoveLegal(int initialPos, bool positivePlayer, int numPositions);
 
-    int getPositivePipCount() const;
-    int getNegativePipCount() const;
+    int positivePipCount() const;
+    int negativePipCount() const;
      
   private:
     static int pipCount(const std::vector<int> &checkers);
