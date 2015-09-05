@@ -19,4 +19,5 @@ add_subdirectory (display)
 include_directories (zeno_common)
 include_directories (display)
 
-add_executable(zeno $<TARGET_OBJECTS:zeno_common> $<TARGET_OBJECTS:display> main.cpp)
+file(GLOB SOURCE_CPP_FILES "*.cpp")
+add_executable(zeno $<TARGET_OBJECTS:zeno_common> $<TARGET_OBJECTS:display> ${SOURCE_CPP_FILES})

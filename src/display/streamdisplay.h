@@ -1,6 +1,6 @@
 
-#ifndef DISPLAY_H__
-#define DISPLAY_H__
+#ifndef STREAMDISPLAY_H__
+#define STREAMDISPLAY_H__
 
 #include "gamestate.h"
 #include <ostream>
@@ -21,4 +21,4 @@ namespace zeno {
 
 }
 
-#endif // TERMINALDISPLAY_H__
+#endif // STREAMDISPLAY_H__

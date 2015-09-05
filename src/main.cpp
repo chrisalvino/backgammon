@@ -5,8 +5,8 @@
 #include <time.h>
 
 #include "zeno_common/defaultdie.h"
-#include "zeno_common/gamestate.h"
 #include "display/terminaldisplay.h"
+#include "game.h"
 #include <iostream>
 
 #include <vector>
@@ -17,15 +17,13 @@ int main() {
 	srand48 (time (0));
 	DefaultDie die;
 
-	GameState gameState;
-	gameState.initializeBackgammon();
-
-
+	Game game;
 
 	StreamDisplay *streamDisplay = new TerminalDisplay();
 
-	streamDisplay->showBoard(gameState, std::cout);
-
+	game.setDisplay(streamDisplay);
+	game.setDie(&die);
+	game.play();
 
 	// std::vector<int> tally;
 	// tally.resize(7);

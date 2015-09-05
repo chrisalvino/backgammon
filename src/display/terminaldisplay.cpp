@@ -70,7 +70,6 @@ void TerminalDisplay::checkerDisplay(
 		negx = xCur-1;
 	}
 
-
 	if (xCur == 25) { // bottom bar
 		if (posPlayerOnBottom) {
 			if (board.positiveCheckers(posx) >= yCur) {
@@ -246,9 +245,17 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 		outStream << std::endl;
 	}
 
+	const std::vector<unsigned int> &dice = gameState.dice();
 
 	outStream << " └12─11─10──9──8──7─┴───┴─6──5──4──3──2──1─┘ ";
 	outStream << (posPlayerOnBottom ? posPipCount : negPipCount);
+	outStream << " ";
+	// status of player on move
+	if (dice[0] == 0) {
+		outStream << "Roll or Double";
+	} else {
+		outStream << "Rolled: " << dice[0] << " " << dice[1];
+	}
 	outStream << std::endl;
 
 }

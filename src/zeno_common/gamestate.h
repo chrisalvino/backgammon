@@ -21,18 +21,25 @@ namespace zeno {
 
 		const Board & board() const { return m_board; }
 
-		void initializeBackgammon();
-		void initializeNackgammon();
-		void initializeHypergammon();
+		void initializeBackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
+		void initializeNackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
+		void initializeHypergammon(unsigned int playerActingFirst, int initialCubeValue = 1);
 
-		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER_INDEX); }
+		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
+		bool isFirstMove() const { return m_firstMove; }
+		void setNoLongerFirstMove() { m_firstMove = false; }
+		void setDiceRoll(unsigned int die1, unsigned int die2);
+		const std::vector<unsigned int> & dice() const { return m_dice; }
 
 		GameType gameType() const { return m_gameType; }
 
-		bool isGameFinished() { return m_gameFinished; }
+		bool isGameFinished() const { return m_gameFinished; }
 
-		static const unsigned int POS_PLAYER_INDEX;
-		static const unsigned int NEG_PLAYER_INDEX;
+		bool isDoubled() { return m_doubled; }
+
+		static const unsigned int POS_PLAYER;
+		static const unsigned int NEG_PLAYER;
+		static const unsigned int NEITHER_PLAYER;
 
 	private:
 		Board m_board;
@@ -40,12 +47,13 @@ namespace zeno {
 		int m_cubeValue;
 		std::vector<unsigned int> m_score;
 		unsigned int m_numGames;
-		unsigned int m_playerOnTurn;
-		bool m_isDoubled;
-		bool m_cubeCentered;
+		unsigned int m_playerOnTurn;		// player whose turn it is
+		bool m_doubled;						// it's doubled and waiting for take/pass
+		bool m_cubeCentered;      
 		unsigned int m_cubeOwner;
 		GameType m_gameType;
 		bool m_gameFinished;
+		bool m_firstMove;
 
 
 	// may include the state below at a later point
