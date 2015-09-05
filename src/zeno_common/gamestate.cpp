@@ -15,6 +15,7 @@ GameState::GameState() {
 	m_score[NEG_PLAYER_INDEX] = 0;
 	m_playerOnTurn = POS_PLAYER_INDEX;
 	m_gameType = GameType::BACKGAMMON;
+	m_gameFinished = true;
 }
 
 GameState::~GameState() {
@@ -31,7 +32,8 @@ m_playerOnTurn(rhs.m_playerOnTurn),
 m_isDoubled(rhs.m_isDoubled),
 m_cubeCentered(rhs.m_cubeCentered),
 m_cubeOwner(rhs.m_cubeOwner),
-m_gameType(rhs.m_gameType)
+m_gameType(rhs.m_gameType),
+m_gameFinished(rhs.m_gameFinished)
 {
 
 }
@@ -48,6 +50,7 @@ GameState & GameState::operator=(const GameState &rhs) {
 	this->m_numGames = rhs.m_numGames;
 	this->m_playerOnTurn = rhs.m_playerOnTurn;
 	this->m_gameType = rhs.m_gameType;
+	this->m_gameFinished = rhs.m_gameFinished;
 
 	return *this;
 }

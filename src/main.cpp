@@ -20,11 +20,11 @@ int main() {
 	GameState gameState;
 	gameState.initializeBackgammon();
 
-	
 
-	TerminalDisplay terminalDisplay;
 
-	terminalDisplay.showBoard(gameState, std::cout);
+	StreamDisplay *streamDisplay = new TerminalDisplay();
+
+	streamDisplay->showBoard(gameState, std::cout);
 
 
 	// std::vector<int> tally;

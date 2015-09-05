@@ -29,6 +29,8 @@ namespace zeno {
 
 		GameType gameType() const { return m_gameType; }
 
+		bool isGameFinished() { return m_gameFinished; }
+
 		static const unsigned int POS_PLAYER_INDEX;
 		static const unsigned int NEG_PLAYER_INDEX;
 
@@ -43,6 +45,7 @@ namespace zeno {
 		bool m_cubeCentered;
 		unsigned int m_cubeOwner;
 		GameType m_gameType;
+		bool m_gameFinished;
 
 
 	// may include the state below at a later point

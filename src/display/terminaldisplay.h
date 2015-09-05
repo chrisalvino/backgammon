@@ -2,13 +2,14 @@
 #ifndef TERMINALDISPLAY_H__
 #define TERMINALDISPLAY_H__
 
+#include "streamdisplay.h"
 #include "gamestate.h"
 #include <ostream>
 #include <string>
 
 namespace zeno {
 
-	class TerminalDisplay {
+	class TerminalDisplay : public StreamDisplay {
 
 	public:
 		TerminalDisplay();
