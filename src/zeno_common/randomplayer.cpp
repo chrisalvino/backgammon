@@ -1,10 +1,12 @@
 
 #include "randomplayer.h"
 
+#include <stdlib.h>
+#include <math.h>
+
 using namespace zeno;
 
-int RandomPlayer::chooseMove(std::vector<Board> possibleBoards) {
-	// TODO
-	// choose uniformly randomly from vector of boards
-	return 0;
+GameState RandomPlayer::chooseMove(std::vector<GameState> possibleBoards) {	
+	int randInd = floor(drand48() * possibleBoards.size());
+	return possibleBoards[randInd];
 }

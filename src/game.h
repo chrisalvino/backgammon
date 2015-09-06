@@ -16,8 +16,8 @@ namespace zeno {
 
 		~Game();
 
-		void setPlayer1(Player *pPlayer) { m_pPlayer1 = pPlayer; }
-		void setPlayer2(Player *pPlayer) { m_pPlayer2 = pPlayer; }
+		void setPlayerPos(Player *pPlayerPos) { m_pPlayerPos = pPlayerPos; }
+		void setPlayerNeg(Player *pPlayerNeg) { m_pPlayerNeg = pPlayerNeg; }
 		void setDie(Die *pDie) { m_pDie = pDie; }
 		void setDisplay(StreamDisplay *pStreamDisplay) { m_pStreamDisplay = pStreamDisplay; }
 
@@ -27,8 +27,8 @@ namespace zeno {
 
 	private:
 		GameState m_gameState;
-		Player *m_pPlayer1;
-		Player *m_pPlayer2;
+		Player *m_pPlayerPos;
+		Player *m_pPlayerNeg;
 		Die *m_pDie;
 		bool m_automaticDoubles;
 		StreamDisplay * m_pStreamDisplay;

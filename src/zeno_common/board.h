@@ -3,6 +3,7 @@
 #define BOARD_H__
 
 #include <vector>
+#include <unordered_set>
 #include "gametype.h"
 
 /*
@@ -22,7 +23,9 @@
     Board(const Board &rhs);
     
     Board & operator=(const Board &rhs);
-    
+
+    bool operator==(const Board & rhs) const; 
+
   public:
     void setUpBackgammonCheckers();
     void setUpNackgammonCheckers();
@@ -41,6 +44,8 @@
 
     int positivePipCount() const;
     int negativePipCount() const;
+
+    friend struct std::hash<Board>;
      
   private:
     static int pipCount(const std::vector<int> &checkers);
@@ -55,5 +60,7 @@
   };
 
 }
+
+#include "board.hxx"
 
 #endif // BOARD_H__

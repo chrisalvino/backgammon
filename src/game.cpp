@@ -5,8 +5,8 @@
 using namespace zeno;
 
 Game::Game() :
-m_pPlayer1(0),
-m_pPlayer2(0),
+m_pPlayerPos(0),
+m_pPlayerNeg(0),
 m_pDie(0),
 m_automaticDoubles(false),
 m_pStreamDisplay(0) {
@@ -44,20 +44,26 @@ void Game::play() {
 	m_gameState.setDiceRoll(posDie, negDie);
 
 	while (!m_gameState.isGameFinished()) {
+		// display board
 		if (m_pStreamDisplay != 0) {
 			m_pStreamDisplay->showBoard(m_gameState,std::cout);
 		}
 
-		return;
 		if (m_gameState.isFirstMove()) {
 			// don't roll dice, dice are provided by initial roll
+			std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
+			if (m_gameState.isPositivePlayerOnTurn()) {
+				
+			} else {
+				
+			}
 
-			m_gameState.setNoLongerFirstMove();
+			m_gameState.finalizeMove();
 		} else {
-				// give opportunity to double, if double, then continue and give
-				// opponent chance to respond
+			// give opportunity to double, if double, then continue and give
+			// opponent chance to respond
 
-				// if no double, then roll dice and move
+			// if no double, then roll dice and move
 
 		}
 	}

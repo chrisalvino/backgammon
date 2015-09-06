@@ -3,7 +3,7 @@
 #define PLAYER_H__
 
 #include <vector>
-#include "board.h"
+#include "gamestate.h"
 #include "evaluation.h"
 
 namespace zeno {
@@ -15,7 +15,7 @@ namespace zeno {
 
     	virtual ~Player();
 
-    	virtual int chooseMove(std::vector<Board> possibleBoards) = 0;
+    	virtual GameState chooseMove(std::vector<GameState> possibleBoards) = 0;
     
     private:
     	Player(const Player &rhs);

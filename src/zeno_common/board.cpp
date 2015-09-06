@@ -2,6 +2,7 @@
 #include "board.h"
 
 #include <vector>
+#include <unordered_set>
 #include "exceptions.h"
 
 using namespace zeno;
@@ -27,6 +28,14 @@ Board::Board(GameType gameType) {
 
 Board::~Board() {
 
+}
+
+bool Board::operator==(const Board &rhs) const {
+  return 
+  m_boardPos == rhs.m_boardPos &&
+  m_boardNeg == rhs.m_boardNeg &&
+  m_totalPosCheckers == rhs.m_totalPosCheckers &&
+  m_totalNegCheckers == rhs.m_totalNegCheckers;
 }
 
 void Board::clearBoard() {
@@ -169,3 +178,4 @@ bool Board::isMoveLegal(int initialPos, bool positivePlayer,  int numPositions) 
 
   return true;
 }
+

@@ -14,7 +14,7 @@ namespace zeno {
 		virtual ~RandomPlayer();
 
 	public:
-		virtual int chooseMove(std::vector<Board> possibleBoards);
+		virtual GameState chooseMove(std::vector<GameState> possibleBoards);
 
 	};
 

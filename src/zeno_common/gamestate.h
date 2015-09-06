@@ -19,6 +19,8 @@ namespace zeno {
 
 		GameState & operator=(const GameState &rhs);
 
+		bool operator==(const GameState & rhs) const;
+
 		const Board & board() const { return m_board; }
 
 		void initializeBackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
@@ -27,7 +29,9 @@ namespace zeno {
 
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
 		bool isFirstMove() const { return m_firstMove; }
-		void setNoLongerFirstMove() { m_firstMove = false; }
+		void finalizeMove();
+		void togglePlayerOnTurn() { m_playerOnTurn = oppositePlayer(m_playerOnTurn); };
+		static unsigned int oppositePlayer(unsigned int player);
 		void setDiceRoll(unsigned int die1, unsigned int die2);
 		const std::vector<unsigned int> & dice() const { return m_dice; }
 
@@ -35,25 +39,41 @@ namespace zeno {
 
 		bool isGameFinished() const { return m_gameFinished; }
 
-		bool isDoubled() { return m_doubled; }
+		bool isCurrentlyDoubled() { return m_currentlyDoubled; }
+
+		std::vector<GameState> possibleMoves() const;
 
 		static const unsigned int POS_PLAYER;
 		static const unsigned int NEG_PLAYER;
 		static const unsigned int NEITHER_PLAYER;
+
+		friend struct std::hash<GameState>;
+
+	private:
+		// force all states to be set
+		void setBooleanStates(
+			bool currentlyDoubled, 
+			bool gameFinished,
+			bool firstMove,
+			bool readyForRoll) {
+			m_currentlyDoubled = currentlyDoubled;
+			m_gameFinished = gameFinished;
+			m_firstMove = firstMove;
+			m_readyForRoll = readyForRoll;
+		}
 
 	private:
 		Board m_board;
 		std::vector<unsigned int> m_dice;
 		int m_cubeValue;
 		std::vector<unsigned int> m_score;
-		unsigned int m_numGames;
-		unsigned int m_playerOnTurn;		// player whose turn it is
-		bool m_doubled;						// it's doubled and waiting for take/pass
-		bool m_cubeCentered;      
+		unsigned int m_playerOnTurn;		// player whose decision it is
 		unsigned int m_cubeOwner;
 		GameType m_gameType;
+		bool m_currentlyDoubled;			// it's doubled and waiting for take/pass     
 		bool m_gameFinished;
 		bool m_firstMove;
+		bool m_readyForRoll;				// player has decided to roll
 
 
 	// may include the state below at a later point
