@@ -52,29 +52,15 @@ void Game::play() {
 		// get possible game states for player to consider
 		std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
 
+		GameState newGameState;
 		// player chooses from possible game states
 		if (m_gameState.isPositivePlayerOnTurn()) {
-			
+			newGameState = m_pPlayerPos->chooseMove(possibleGameStates);
 		} else {
-			
+			newGameState = m_pPlayerNeg->chooseMove(possibleGameStates);
 		}
 
-		if (m_gameState.isFirstMove()) {
-			// don't roll dice, dice are provided by initial roll
-			if () {
-
-			} else {
-
-			}
-
-			m_gameState.finalizeMove();
-		} else {
-			// give opportunity to double, if double, then continue and give
-			// opponent chance to respond
-
-			// if no double, then roll dice and move
-
-		}
+		
 	}
 
 }

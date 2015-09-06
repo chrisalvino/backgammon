@@ -5,6 +5,7 @@
 #include <time.h>
 
 #include "zeno_common/defaultdie.h"
+#include "zeno_common/randomplayer.h"
 #include "display/terminaldisplay.h"
 #include "game.h"
 #include <iostream>
@@ -19,10 +20,14 @@ int main() {
 
 	Game game;
 
-	Display *display = new TerminalDisplay(std::cout);
+	TerminalDisplay display(std::cout);
+	RandomPlayer posPlayer;
+	RandomPlayer negPlayer;
 
-	game.setDisplay(display);
+	game.setDisplay(&display);
 	game.setDie(&die);
+	game.setPlayerPos(&posPlayer);
+	game.setPlayerNeg(&negPlayer);
 	game.play();
 
 	// std::vector<int> tally;

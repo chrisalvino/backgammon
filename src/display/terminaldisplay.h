@@ -14,7 +14,7 @@ namespace zeno {
 	public:
 		TerminalDisplay(std::ostream &outStream);
 
-		~TerminalDisplay();
+		virtual ~TerminalDisplay();
 
 	public:
 		void showBoard(const GameState & gs);

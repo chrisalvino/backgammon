@@ -11,9 +11,9 @@ namespace zeno {
     class Player {
     	
     public:
-    	Player();
+    	Player() { }
 
-    	virtual ~Player();
+    	virtual ~Player() { }
 
     	virtual GameState chooseMove(std::vector<GameState> possibleBoards) = 0;
     
