@@ -2,31 +2,30 @@
 #ifndef TERMINALDISPLAY_H__
 #define TERMINALDISPLAY_H__
 
-#include "streamdisplay.h"
+#include "display.h"
 #include "gamestate.h"
 #include <ostream>
 #include <string>
 
 namespace zeno {
 
-	class TerminalDisplay : public StreamDisplay {
+	class TerminalDisplay : public Display {
 
 	public:
-		TerminalDisplay();
+		TerminalDisplay(std::ostream &outStream);
 
 		~TerminalDisplay();
 
 	public:
-		void showBoard(const GameState & gs, std::ostream &outStream);
+		void showBoard(const GameState & gs);
 
 	private:
-		static void checkerDisplay(
+		void checkerDisplay(
 			const Board & board,
 			int yCur,
 			int xCur, // 25 and -25 are the bottom player and top player's bars respectively
 			int yMax,
-			bool posPlayerOnBottom,
-			std::ostream &outStream
+			bool posPlayerOnBottom
 			);
 
 		static const std::string m_blackChecker;
@@ -35,6 +34,8 @@ namespace zeno {
 		static const std::string m_leftSideCharacter;
 		static const std::string m_rightSideCharacter;
 		static const std::vector<std::string> m_extraCheckers;
+
+		std::ostream &m_outStream;
 
 	};
 

@@ -1,24 +1,24 @@
 
-#ifndef STREAMDISPLAY_H__
-#define STREAMDISPLAY_H__
+#ifndef DISPLAY_H__
+#define DISPLAY_H__
 
 #include "gamestate.h"
 #include <ostream>
 
 namespace zeno {
 
-	class StreamDisplay {
+	class Display {
 
 	public:
-		StreamDisplay() { }
+		Display() { }
 
-		virtual ~StreamDisplay() { }
+		virtual ~Display() { }
 
 	public:
-		virtual void showBoard(const GameState & gs, std::ostream &outStream) = 0;
+		virtual void showBoard(const GameState & gs) = 0;
 
 	};
 
 }
 
-#endif // STREAMDISPLAY_H__
+#endif // DISPLAY_H__

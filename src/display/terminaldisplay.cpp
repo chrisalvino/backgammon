@@ -15,7 +15,8 @@ const std::vector<std::string> TerminalDisplay::m_extraCheckers
 = {"","","","","","","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮"};
 
 
-TerminalDisplay::TerminalDisplay() {
+TerminalDisplay::TerminalDisplay(std::ostream &outStream) :
+m_outStream(outStream) {
 
 }
 
@@ -49,11 +50,10 @@ void TerminalDisplay::checkerDisplay(
 	int yCur,
 	int xCur, // 25 and -25 are the bottom player and top player's bars respectively
 	int yMax,
-	bool posPlayerOnBottom,
-	std::ostream &outStream
+	bool posPlayerOnBottom
 	) {
 
-	outStream << " ";
+	m_outStream << " ";
 
 	int posx;
 	int negx;
@@ -74,67 +74,67 @@ void TerminalDisplay::checkerDisplay(
 		if (posPlayerOnBottom) {
 			if (board.positiveCheckers(posx) >= yCur) {
 				if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
-					outStream << m_extraCheckers[board.positiveCheckers(posx)];
+					m_outStream << m_extraCheckers[board.positiveCheckers(posx)];
 				} else {
-					outStream << m_blackChecker;
+					m_outStream << m_blackChecker;
 				}		
 			} else {
-				outStream << " ";
+				m_outStream << " ";
 			}
 		} else {
 			if (board.negativeCheckers(negx) >= yCur) {
 				if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
-					outStream << m_extraCheckers[board.negativeCheckers(negx)];
+					m_outStream << m_extraCheckers[board.negativeCheckers(negx)];
 				} else {
-					outStream << m_whiteChecker;
+					m_outStream << m_whiteChecker;
 				}
 			} else {
-				outStream << " ";
+				m_outStream << " ";
 			}
 		}
 	} else if (xCur == -25) { // top bar
 		if (posPlayerOnBottom) {
 			if (board.negativeCheckers(negx) >= yCur) {
 				if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
-					outStream << m_extraCheckers[board.negativeCheckers(negx)];
+					m_outStream << m_extraCheckers[board.negativeCheckers(negx)];
 				} else {
-					outStream << m_whiteChecker;
+					m_outStream << m_whiteChecker;
 				}		
 			}
 			else { 
-				outStream << " ";
+				m_outStream << " ";
 			}
 		} else {
 			if (board.positiveCheckers(posx) >= yCur) {
 				if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
-					outStream << m_extraCheckers[board.positiveCheckers(posx)];
+					m_outStream << m_extraCheckers[board.positiveCheckers(posx)];
 				} else {
-					outStream << m_blackChecker;
+					m_outStream << m_blackChecker;
 				}				
 			} else {
-				outStream << " ";
+				m_outStream << " ";
 			}
 		}		
 	} else if (board.positiveCheckers(posx) >= yCur) {
 		if (yCur == yMax && board.positiveCheckers(posx) > yMax) {
-			outStream << m_extraCheckers[board.positiveCheckers(posx)];
+			m_outStream << m_extraCheckers[board.positiveCheckers(posx)];
 		} else {
-			outStream << m_blackChecker;
+			m_outStream << m_blackChecker;
 		}
 	} else if (board.negativeCheckers(negx) >= yCur) {
 		if (yCur == yMax && board.negativeCheckers(negx) > yMax) {
-			outStream << m_extraCheckers[board.negativeCheckers(negx)];
+			m_outStream << m_extraCheckers[board.negativeCheckers(negx)];
 		} else {
-			outStream << m_whiteChecker;
+			m_outStream << m_whiteChecker;
 		}
 	} else {
-		outStream << " ";
+		m_outStream << " ";
 	}
 
-	outStream << " ";
+	m_outStream << " ";
 }
 
-void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outStream) {
+void TerminalDisplay::showBoard(const GameState & gameState) {
 
 	const Board & board = gameState.board();
 	bool posPlayerOnBottom = gameState.isPositivePlayerOnTurn();
@@ -145,31 +145,31 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 	int posPipCount = board.positivePipCount();
 	int negPipCount = board.negativePipCount();
 
-	outStream << " ┌13─14─15─16─17─18─┬───┬19─20─21─22─23─24─┐ ";
-	outStream << (posPlayerOnBottom ? negPipCount : posPipCount);
-	outStream << std::endl;
+	m_outStream << " ┌13─14─15─16─17─18─┬───┬19─20─21─22─23─24─┐ ";
+	m_outStream << (posPlayerOnBottom ? negPipCount : posPipCount);
+	m_outStream << std::endl;
 
 	int ymin = 1;
 	int ymax = 5;
 	for (int ytop=ymin;ytop<=ymax;ytop++) {
-		outStream << " ";
-		outStream << m_leftSideCharacter;
+		m_outStream << " ";
+		m_outStream << m_leftSideCharacter;
 
 		for (int x=13;x<=18;x++) {
-			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom,outStream);
+			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom);
 		}
 
 		// checkers on bar
-		outStream << m_rightSideCharacter;
-		checkerDisplay(board,ytop,-25,ymax,posPlayerOnBottom,outStream);
-		outStream << m_leftSideCharacter;
+		m_outStream << m_rightSideCharacter;
+		checkerDisplay(board,ytop,-25,ymax,posPlayerOnBottom);
+		m_outStream << m_leftSideCharacter;
 
 		for (int x=19;x<=24;x++) {
-			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom,outStream);
+			checkerDisplay(board,ytop,x,ymax,posPlayerOnBottom);
 		}
 
-		outStream << m_rightSideCharacter;
-		outStream << " ";
+		m_outStream << m_rightSideCharacter;
+		m_outStream << " ";
 
 		// born off checkers
 		std::string topBornOffChar;
@@ -184,44 +184,44 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 
 		for (int xbar=0;xbar<3;xbar++) {
 			if (topPlayerNumBornOff >= xbar*5 + ytop) {
-				outStream << topBornOffChar;
+				m_outStream << topBornOffChar;
 			} else {
-				outStream << " ";
+				m_outStream << " ";
 			}
 		}
 		
-		outStream << std::endl;
+		m_outStream << std::endl;
 	}
 
-	outStream << " ";
-	outStream << m_rightSideCharacter;
-	outStream << "                  ";
-	outStream << m_leftSideCharacter;
-	outStream << " " << m_centerPiece << " ";
-	outStream << m_leftSideCharacter;
-	outStream << "                  ";
-	outStream << m_rightSideCharacter;
-	outStream << std::endl;
+	m_outStream << " ";
+	m_outStream << m_rightSideCharacter;
+	m_outStream << "                  ";
+	m_outStream << m_leftSideCharacter;
+	m_outStream << " " << m_centerPiece << " ";
+	m_outStream << m_leftSideCharacter;
+	m_outStream << "                  ";
+	m_outStream << m_rightSideCharacter;
+	m_outStream << std::endl;
 
 	for (int ybottom=ymax;ybottom>=ymin;ybottom--) {
-		outStream << " ";
-		outStream << m_leftSideCharacter;
+		m_outStream << " ";
+		m_outStream << m_leftSideCharacter;
 
 		for (int x=12;x>=7;x--) {
-			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom,outStream);
+			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom);
 		}
 
 		// checkers on bar
-		outStream << m_rightSideCharacter;
-		checkerDisplay(board,ybottom,25,ymax,posPlayerOnBottom,outStream);
-		outStream << m_leftSideCharacter;
+		m_outStream << m_rightSideCharacter;
+		checkerDisplay(board,ybottom,25,ymax,posPlayerOnBottom);
+		m_outStream << m_leftSideCharacter;
 
 		for (int x=6;x>=1;x--) {
-			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom,outStream);
+			checkerDisplay(board,ybottom,x,ymax,posPlayerOnBottom);
 		}
 
-		outStream << m_rightSideCharacter;
-		outStream << " ";
+		m_outStream << m_rightSideCharacter;
+		m_outStream << " ";
 
 		// born off checkers
 		std::string bottomBornOffChar;
@@ -236,26 +236,26 @@ void TerminalDisplay::showBoard(const GameState & gameState, std::ostream &outSt
 
 		for (int xbar=0;xbar<3;xbar++) {
 			if (bottomPlayerNumBornOff >= xbar*5 + ybottom) {
-				outStream << bottomBornOffChar;
+				m_outStream << bottomBornOffChar;
 			} else {
-				outStream << " ";
+				m_outStream << " ";
 			}
 		}
 
-		outStream << std::endl;
+		m_outStream << std::endl;
 	}
 
 	const std::vector<unsigned int> &dice = gameState.dice();
 
-	outStream << " └12─11─10──9──8──7─┴───┴─6──5──4──3──2──1─┘ ";
-	outStream << (posPlayerOnBottom ? posPipCount : negPipCount);
-	outStream << " ";
+	m_outStream << " └12─11─10──9──8──7─┴───┴─6──5──4──3──2──1─┘ ";
+	m_outStream << (posPlayerOnBottom ? posPipCount : negPipCount);
+	m_outStream << " ";
 	// status of player on move
 	if (dice[0] == 0) {
-		outStream << "Roll or Double";
+		m_outStream << "Roll or Double";
 	} else {
-		outStream << "Rolled: " << dice[0] << " " << dice[1];
+		m_outStream << "Rolled: " << dice[0] << " " << dice[1];
 	}
-	outStream << std::endl;
+	m_outStream << std::endl;
 
 }

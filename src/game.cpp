@@ -9,7 +9,7 @@ m_pPlayerPos(0),
 m_pPlayerNeg(0),
 m_pDie(0),
 m_automaticDoubles(false),
-m_pStreamDisplay(0) {
+m_pDisplay(0) {
 
 }
 
@@ -39,23 +39,32 @@ void Game::play() {
 
 	unsigned int startingPlayer = (posDie > negDie) ? GameState::POS_PLAYER : GameState::NEG_PLAYER ;
 
-	// reset board
+	// set up initial game state
 	m_gameState.initializeBackgammon(startingPlayer, initialCubeValue);
 	m_gameState.setDiceRoll(posDie, negDie);
 
 	while (!m_gameState.isGameFinished()) {
 		// display board
-		if (m_pStreamDisplay != 0) {
-			m_pStreamDisplay->showBoard(m_gameState,std::cout);
+		if (m_pDisplay != 0) {
+			m_pDisplay->showBoard(m_gameState);
+		}
+
+		// get possible game states for player to consider
+		std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
+
+		// player chooses from possible game states
+		if (m_gameState.isPositivePlayerOnTurn()) {
+			
+		} else {
+			
 		}
 
 		if (m_gameState.isFirstMove()) {
 			// don't roll dice, dice are provided by initial roll
-			std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
-			if (m_gameState.isPositivePlayerOnTurn()) {
-				
+			if () {
+
 			} else {
-				
+
 			}
 
 			m_gameState.finalizeMove();

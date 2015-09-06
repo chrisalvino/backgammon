@@ -19,9 +19,9 @@ int main() {
 
 	Game game;
 
-	StreamDisplay *streamDisplay = new TerminalDisplay();
+	Display *display = new TerminalDisplay(std::cout);
 
-	game.setDisplay(streamDisplay);
+	game.setDisplay(display);
 	game.setDie(&die);
 	game.play();
 

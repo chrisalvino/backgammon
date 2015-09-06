@@ -83,7 +83,6 @@ namespace zeno {
     // int fResigned;          // will handle resignation later
     // int fResignationDeclined;  
     // int fDoubled;              
-    // int fMove;                  // player on roll 
     // int fCrawford;              // match
     // int fPostCrawford;          // match
     // int nMatchTo;               // match      
@@ -95,5 +94,7 @@ namespace zeno {
 };
 
 }
+
+#include "gamestate.hxx"
 
 #endif // GAMESTATE_H__

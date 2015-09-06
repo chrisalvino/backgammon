@@ -2,6 +2,7 @@
 #include <set>
 #include <deque>
 #include <unordered_set>
+#include "stdlib.h"
 #include "gamestate.h"
 
 using namespace zeno;
@@ -9,30 +10,6 @@ using namespace zeno;
 const unsigned int GameState::POS_PLAYER = 0;
 const unsigned int GameState::NEG_PLAYER = 1;
 const unsigned int GameState::NEITHER_PLAYER = 2;
-
-namespace std {
-template<> struct hash<GameState> {
-  size_t operator()(const GameState &gameState) const {
-
-    size_t retval = 0;
-    retval += std::hash<Board>()(gameState.m_board);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_dice[0]);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_dice[1]);
-    retval += 31 * retval + std::hash<int>()(gameState.m_cubeValue);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_score[0]);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_score[1]);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_playerOnTurn);
-    retval += 31 * retval + std::hash<unsigned int>()(gameState.m_cubeOwner);
-    retval += 31 * retval + std::hash<int>()((int)gameState.m_gameType);
-    retval += 31 * retval + std::hash<bool>()(gameState.m_currentlyDoubled);
-    retval += 31 * retval + std::hash<bool>()(gameState.m_gameFinished);
-    retval += 31 * retval + std::hash<bool>()(gameState.m_firstMove);
-    retval += 31 * retval + std::hash<bool>()(gameState.m_readyForRoll);
-    
-    return retval;
-  }
-};
-}
 
 GameState::GameState() :
 m_dice({0,0}),
@@ -154,10 +131,11 @@ struct GameStateAndDiceToMove {
 namespace std {
 template<> struct hash<GameStateAndDiceToMove> {
 	size_t operator()(const GameStateAndDiceToMove &gameStateAndDiceToMove) const {
-		return 
-		//std::hash<Board>()(gameState.m_board)
-		std::hash<GameState>()(gameStateAndDiceToMove.m_gameState) ^ 
-		std::hash<unsigned int>()(gameStateAndDiceToMove.m_diceToMove[0]);
+		size_t retval = std::hash<GameState>()(gameStateAndDiceToMove.m_gameState);
+		for (int i=0;i<=gameStateAndDiceToMove.m_diceToMove.size();++i) {
+			retval += 31 * retval + std::hash<unsigned int>()(gameStateAndDiceToMove.m_diceToMove[i]);
+		}
+		return retval;
 	}
 };
 }
@@ -239,12 +217,26 @@ std::vector<GameState> GameState::possibleMoves() const {
 		statesToProcess.insert(initialgsadtm);
 
 		while (!statesToProcess.empty()) {
+			// grab first entry in the set and remove it
+			GameStateAndDiceToMove currentGSADTM(*statesToProcess.begin());
+			statesToProcess.erase(statesToProcess.begin());
 
+			// loop over remaining dice rolls
+			//// for each of those, loop over checkers that can be moved to any legal position
+			///// put on a new state for all possible dice moves
+			for (std::vector<unsigned int>::iterator ite = currentGSADTM.m_diceToMove.begin();
+				ite != currentGSADTM.m_diceToMove.end();
+				ite++) {
+				// unsigned int currentDie = *ite;
+
+				// GameStateAndDiceToMove
+
+				for (;;) {
+
+				}
+
+			}
 		}
-
-		// remove duplicates
-
-
 
 	}
 
