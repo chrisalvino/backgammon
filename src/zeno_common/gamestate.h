@@ -44,6 +44,11 @@ namespace zeno {
 
 		bool isCurrentlyDoubled() { return m_currentlyDoubled; }
 
+		bool isCubeCentered() const { return m_cubeOwner == NEITHER_PLAYER; }
+		bool posPlayerOwnsCube() const { return m_cubeOwner == POS_PLAYER; }
+		bool negPlayerOwnsCube() const { return m_cubeOwner == NEG_PLAYER; }
+		int cubeValue() const { return m_cubeValue; }
+
 		std::vector<GameState> possibleMoves() const;
 
 		static const unsigned int POS_PLAYER;

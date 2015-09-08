@@ -145,6 +145,8 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 	int posPipCount = board.positivePipCount();
 	int negPipCount = board.negativePipCount();
 
+	int cubeValue = gameState.cubeValue();
+
 	m_outStream << " ┌13─14─15─16─17─18─┬───┬19─20─21─22─23─24─┐ ";
 	m_outStream << (posPlayerOnBottom ? negPipCount : posPipCount);
 	m_outStream << std::endl;
@@ -174,12 +176,15 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 		// born off checkers
 		std::string topBornOffChar;
 		int topPlayerNumBornOff;
+		int topPlayerOwnsCube;
 		if (posPlayerOnBottom) { 
 			topBornOffChar = m_whiteChecker;
 			topPlayerNumBornOff = negativeCheckersBornOff;
+			topPlayerOwnsCube = gameState.negPlayerOwnsCube();
 		} else {
 			topBornOffChar = m_blackChecker;
 			topPlayerNumBornOff = positiveCheckersBornOff;
+			topPlayerOwnsCube = gameState.posPlayerOwnsCube();
 		} 
 
 		for (int xbar=0;xbar<3;xbar++) {
@@ -189,6 +194,10 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 				m_outStream << " ";
 			}
 		}
+
+		if (ytop == ymin && topPlayerOwnsCube) {
+			m_outStream << " Cube: " << cubeValue;
+		}		
 		
 		m_outStream << std::endl;
 	}
@@ -201,6 +210,9 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 	m_outStream << m_leftSideCharacter;
 	m_outStream << "                  ";
 	m_outStream << m_rightSideCharacter;
+	if (gameState.isCubeCentered()) {
+		m_outStream << " Cube: " << cubeValue;
+	}
 	m_outStream << std::endl;
 
 	for (int ybottom=ymax;ybottom>=ymin;ybottom--) {
@@ -226,12 +238,15 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 		// born off checkers
 		std::string bottomBornOffChar;
 		int bottomPlayerNumBornOff;
+		bool bottomPlayerOwnsCube;
 		if (posPlayerOnBottom) { 
 			bottomBornOffChar = m_blackChecker;
 			bottomPlayerNumBornOff = positiveCheckersBornOff;
+			bottomPlayerOwnsCube = gameState.posPlayerOwnsCube();
 		} else {
 			bottomBornOffChar = m_whiteChecker;
 			bottomPlayerNumBornOff = negativeCheckersBornOff;
+			bottomPlayerOwnsCube = gameState.negPlayerOwnsCube();
 		} 
 
 		for (int xbar=0;xbar<3;xbar++) {
@@ -240,6 +255,10 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 			} else {
 				m_outStream << " ";
 			}
+		}
+
+		if (ybottom == ymin && bottomPlayerOwnsCube) {
+			m_outStream << " Cube: " << cubeValue;
 		}
 
 		m_outStream << std::endl;
