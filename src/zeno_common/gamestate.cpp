@@ -2,6 +2,8 @@
 #include <deque>
 #include <unordered_set>
 #include <algorithm>
+#include <iostream>
+#include "../display/terminaldisplay.h"
 #include "stdlib.h"
 #include "gamestate.h"
 
@@ -84,7 +86,10 @@ void GameState::initializeBackgammon(unsigned int playerActingFirst, int initial
 	m_board.setUpBackgammonCheckers();
 	m_playerOnTurn = playerActingFirst;
 	m_cubeValue = initialCubeValue;
-	m_firstMove = true;
+	setBooleanStates(false, // not currently doubled 
+			false, // game not finished
+			true,  // first move
+			true); // ready for roll
 	m_gameType = GameType::BACKGAMMON;
 }
 
@@ -92,7 +97,10 @@ void GameState::initializeNackgammon(unsigned int playerActingFirst, int initial
 	m_board.setUpNackgammonCheckers();
 	m_playerOnTurn = playerActingFirst;
 	m_cubeValue = initialCubeValue;
-	m_firstMove = true;
+	setBooleanStates(false, // not currently doubled 
+			false, // game not finished
+			true,  // first move
+			true); // ready for roll	
 	m_gameType = GameType::NACKGAMMON;
 }
 
@@ -100,13 +108,17 @@ void GameState::initializeHypergammon(unsigned int playerActingFirst, int initia
 	m_board.setUpHypergammonCheckers();
 	m_playerOnTurn = playerActingFirst;
 	m_cubeValue = initialCubeValue;	
-	m_firstMove = true;	
+	setBooleanStates(false, // not currently doubled 
+			false, // game not finished
+			true,  // first move
+			true); // ready for roll	
 	m_gameType = GameType::HYPERGAMMON;
 }
 
 void GameState::setDiceRoll(unsigned int die1, unsigned int die2) {
 	m_dice[0] = die1;
 	m_dice[1] = die2;
+	m_readyForRoll = false;
 }
 
 void GameState::finalizeMove() {
@@ -153,7 +165,7 @@ namespace std {
 template<> struct hash<GameStateAndDiceToMove> {
 	size_t operator()(const GameStateAndDiceToMove &gameStateAndDiceToMove) const {
 		size_t retval = std::hash<GameState>()(gameStateAndDiceToMove.m_gameState);
-		for (int i=0;i<=gameStateAndDiceToMove.m_diceToMove.size();++i) {
+		for (int i=0;i<gameStateAndDiceToMove.m_diceToMove.size();++i) {
 			retval += 31 * retval + std::hash<unsigned int>()(gameStateAndDiceToMove.m_diceToMove[i]);
 		}
 		return retval;
@@ -244,6 +256,7 @@ std::vector<GameState> GameState::possibleMoves() const {
 
 		// size of statesToProcess is growing
 		for (int stateInd = 0; stateInd < statesToProcess.size(); ++stateInd) {
+			
 			// we'll grab an unprocessed game state and spawn a number of 
 			// possible resulting game states from it
 			GameStateAndDiceToMove gsadtm(statesToProcess[stateInd]);
@@ -258,6 +271,7 @@ std::vector<GameState> GameState::possibleMoves() const {
 				if (m_playerOnTurn==POS_PLAYER) {
 					int minInitialPosition;
 					int maxInitialPosition;
+
 					if (considered_gasdtm.m_gameState.board().posPlayerHasCheckersOnBar()) {
 						minInitialPosition = Board::BAR_POSITION;
 						maxInitialPosition = Board::BAR_POSITION;
@@ -268,9 +282,11 @@ std::vector<GameState> GameState::possibleMoves() const {
 					for (int i = minInitialPosition;
 						i <= maxInitialPosition;
 						++i) {
+
 						if (considered_gasdtm.m_gameState.board().isPosMoveLegal(i, dieUnderConsideration)) {
+
 						// form new gasdtm from it where that position is moved
-							GameState candidateGameState = considered_gasdtm.m_gameState;
+							GameState candidateGameState(considered_gasdtm.m_gameState);
 							candidateGameState.movePosChecker(i, dieUnderConsideration);
 
 						// remove die roll too
@@ -280,7 +296,7 @@ std::vector<GameState> GameState::possibleMoves() const {
 							GameStateAndDiceToMove candidate_gasdtm(candidateGameState,candidateDice);
 
 						// only add it if it's not already been added
-							if (statesAlreadyAdded.find(candidate_gasdtm) != statesAlreadyAdded.end()) {
+							if (statesAlreadyAdded.find(candidate_gasdtm) == statesAlreadyAdded.end()) {
 								statesAlreadyAdded.insert(candidate_gasdtm);
 								statesToProcess.push_back(candidate_gasdtm);
 
@@ -293,6 +309,7 @@ std::vector<GameState> GameState::possibleMoves() const {
 				} else {
 					int minInitialPosition;
 					int maxInitialPosition;
+
 					if (considered_gasdtm.m_gameState.board().negPlayerHasCheckersOnBar()) {
 						minInitialPosition = Board::BAR_POSITION;
 						maxInitialPosition = Board::BAR_POSITION;
@@ -315,7 +332,7 @@ std::vector<GameState> GameState::possibleMoves() const {
 							GameStateAndDiceToMove candidate_gasdtm(candidateGameState,candidateDice);
 
 						// only add it if it's not already been added
-							if (statesAlreadyAdded.find(candidate_gasdtm) != statesAlreadyAdded.end()) {
+							if (statesAlreadyAdded.find(candidate_gasdtm) == statesAlreadyAdded.end()) {
 								statesAlreadyAdded.insert(candidate_gasdtm);
 								statesToProcess.push_back(candidate_gasdtm);
 
