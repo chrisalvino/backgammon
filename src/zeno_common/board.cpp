@@ -7,7 +7,9 @@
 
 using namespace zeno;
 
-const int Board::NUM_POSITIONS=25;  // 25 positions, 0 to 23 are on the board, 24 is bar
+const int Board::NUM_POSITIONS=25;  // 25 positions, 0 to 23 are on the board
+const int Board::ON_BOARD_POSITIONS=24;
+const int Board::BAR_POSITION=24;   // 24 is bar
 
 Board::Board(GameType gameType) {
   m_boardPos.resize(NUM_POSITIONS); 
@@ -166,16 +168,141 @@ Board & Board::operator=(const Board &rhs) {
   return *this;
 }
 
-bool Board::moveChecker(int initialPos, bool positivePlayer, int numPositions) {
-  if (!isMoveLegal(initialPos, positivePlayer, numPositions) ) {
-    throw zeno::IllegalMoveException();
+bool Board::movePosChecker(int initialPos, int numPositions) {
+  if (isPosMoveLegal(initialPos, numPositions)) {
+    // move it and return 
+    moveChecker(initialPos, numPositions, m_boardPos, m_boardNeg);
+    return true;
+  }
+  return false;
+}
+
+bool Board::moveNegChecker(int initialPos, int numPositions) {
+  if (isNegMoveLegal(initialPos, numPositions)) {
+    // move it and return 
+    moveChecker(initialPos, numPositions, m_boardNeg, m_boardPos);
+    return true;
+  }
+  return false;
+}
+
+void Board::moveChecker(
+  int initialPos,
+  int numPositions,
+  std::vector<int> &checkers, 
+  std::vector<int> &opponentCheckers) {
+  checkers[initialPos] -= 1; // take checker off initial position
+
+  // now determine target position
+  int targetPos = initialPos - numPositions;
+  int opponentTargetPos = opposingPosition(targetPos);
+
+  // only care about greater than 0 case
+  // if less than or equal to 0, it's borne off
+  if (targetPos >= 0) { 
+    checkers[targetPos] += 1; 
+
+    if (opponentCheckers[opponentTargetPos] >= 2) {
+      throw IllegalMoveException();
+    }
+
+      // remove opponent checker from that position
+      // and place on opponents bar
+    if (opponentCheckers[opponentTargetPos] == 1) {
+      opponentCheckers[opponentTargetPos] = 0;  
+      opponentCheckers[BAR_POSITION] += 1;
+    }
+  }
+}
+
+bool Board::isPosMoveLegal(int initialPos, int numPositions) const {
+  return isMoveLegal(initialPos, numPositions, m_boardPos, m_boardNeg);
+}
+
+bool Board::isNegMoveLegal(int initialPos, int numPositions) const {
+  return isMoveLegal(initialPos, numPositions, m_boardNeg, m_boardPos);
+}
+
+bool Board::isMoveLegal(
+  int initialPosition, 
+  int numPositions, 
+  const std::vector<int> &checkers, 
+  const std::vector<int> &opponentCheckers) {
+
+  if (initialPosition < 0) {
+    return false;
+  }
+
+  if (initialPosition > BAR_POSITION) {
+    return false;
+  }
+
+  if (numPositions < 1 || numPositions > 6) {
+    return false;
+  }
+
+  // if you have someone on the bar, must move it first
+  // if you don't, then move is illegal
+  if (checkers[BAR_POSITION] > 0) {
+    if (initialPosition != BAR_POSITION) {
+      return false;
+    }
+  }
+
+  // if player has no checkers on that position, then must be illegal
+  if (checkers[initialPosition] == 0) {
+    return false;
+  }
+
+  int targetPosition = initialPosition - numPositions;
+  
+  // bearing off case next
+  if (targetPosition < 0) {
+    // no checkers outside of inner board  
+    if (!allCheckersInInnerBoard(checkers)) {
+      return false;
+    }
+    // if exact roll then ok
+    if (targetPosition == -1) {
+      return true;
+    } else {
+      // must be highest position
+      if(!noCheckersHigherThan(checkers, initialPosition)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  // otherwise targetPosition >= 0 so we can check opposing position 
+  // for blocked point
+  int opponentTargetPosition = opposingPosition(targetPosition);
+
+  // can't possibly move somewhere if oppponent has two or more checkers on it
+  // we don't have to check for 
+  if (opponentCheckers[opponentTargetPosition] >= 2) {
+    return false;
   }
 
   return true;
 }
 
-bool Board::isMoveLegal(int initialPos, bool positivePlayer,  int numPositions) {
+bool Board::allPosCheckersInInnerBoard() const {
+  return allCheckersInInnerBoard(m_boardPos);
+}
+bool Board::allNegCheckersInInnerBoard() const {
+  return allCheckersInInnerBoard(m_boardNeg);
+}
 
+bool Board::noCheckersHigherThan(const std::vector<int> &checkers, int position) {
+  for (int i=position+1;i<NUM_POSITIONS;++i) {
+    if (checkers[i] > 0) {
+      return false;
+    }
+  }
   return true;
 }
 
+bool Board::allCheckersInInnerBoard(const std::vector<int> &checkers) {
+  return noCheckersHigherThan(checkers, 5);
+}

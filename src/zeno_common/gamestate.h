@@ -27,6 +27,9 @@ namespace zeno {
 		void initializeNackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
 		void initializeHypergammon(unsigned int playerActingFirst, int initialCubeValue = 1);
 
+		void movePosChecker(int initialPos, int numPositions);
+		void moveNegChecker(int initialPos, int numPositions);
+
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
 		bool isFirstMove() const { return m_firstMove; }
 		void finalizeMove();
@@ -91,7 +94,7 @@ namespace zeno {
     // int fCubeUse;               // will do later
     // int fJacoby;                // will do later
 
-};
+	};
 
 }
 

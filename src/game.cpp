@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <iostream>
 #include "game.h"
 
@@ -52,6 +53,13 @@ void Game::play() {
 		// get possible game states for player to consider
 		std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
 
+		for (auto ite = possibleGameStates.begin(); ite != possibleGameStates.end() ; ++ite) {
+			if (m_pDisplay != 0) {
+				m_pDisplay->showBoard(*ite);
+			}
+		}	
+		exit(1);		
+
 		GameState newGameState;
 		// player chooses from possible game states
 		if (m_gameState.isPositivePlayerOnTurn()) {
@@ -60,7 +68,11 @@ void Game::play() {
 			newGameState = m_pPlayerNeg->chooseMove(possibleGameStates);
 		}
 
-		
+		// make this the new game state
+		m_gameState = newGameState;
+
+		// anything needed for game to update state here
+		// no-op currently
 	}
 
 }

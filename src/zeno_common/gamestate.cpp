@@ -1,7 +1,7 @@
 
-#include <set>
 #include <deque>
 #include <unordered_set>
+#include <algorithm>
 #include "stdlib.h"
 #include "gamestate.h"
 
@@ -119,7 +119,28 @@ unsigned int GameState::oppositePlayer(unsigned int player) {
 	return player == POS_PLAYER ? NEG_PLAYER : POS_PLAYER;
 }
 
+void GameState::movePosChecker(int initialPos, int numPositions) {
+	m_board.movePosChecker(initialPos, numPositions);
+}
+
+void GameState::moveNegChecker(int initialPos, int numPositions) {
+	m_board.moveNegChecker(initialPos, numPositions);
+}
+
 struct GameStateAndDiceToMove {
+public:
+	GameStateAndDiceToMove(const GameState & gameState, const std::vector<unsigned int> & diceToMove) :
+	m_gameState(gameState),
+	m_diceToMove(diceToMove) {
+
+	}
+
+	GameStateAndDiceToMove(const GameStateAndDiceToMove & rhs) :
+	m_gameState(rhs.m_gameState),
+	m_diceToMove(rhs.m_diceToMove) {
+
+	}	
+
 	GameState m_gameState;
 	std::vector<unsigned int> m_diceToMove;
 	friend struct std::hash<GameStateAndDiceToMove>;
@@ -208,37 +229,126 @@ std::vector<GameState> GameState::possibleMoves() const {
 			diceToMove.push_back(m_dice[1]);
 		}
 
+		// sort dice (to make state space smaller)
+		std::sort(diceToMove.begin(),diceToMove.end());
+
 		GameState currentGameState(*this);
-		std::unordered_set<GameStateAndDiceToMove, std::hash<GameStateAndDiceToMove>> statesToProcess; 
-		GameStateAndDiceToMove initialgsadtm;
-		initialgsadtm.m_gameState = currentGameState;
-		initialgsadtm.m_diceToMove = diceToMove;
+		std::deque<GameStateAndDiceToMove> statesToProcess;
+		std::unordered_set<GameStateAndDiceToMove, std::hash<GameStateAndDiceToMove>> statesAlreadyAdded; 
+		GameStateAndDiceToMove initialgsadtm(currentGameState,diceToMove);
 
-		statesToProcess.insert(initialgsadtm);
+		statesAlreadyAdded.insert(initialgsadtm);
+		statesToProcess.push_back(initialgsadtm);
 
-		while (!statesToProcess.empty()) {
-			// grab first entry in the set and remove it
-			GameStateAndDiceToMove currentGSADTM(*statesToProcess.begin());
-			statesToProcess.erase(statesToProcess.begin());
+		unsigned int minDiceRemaining = diceToMove.size();
 
-			// loop over remaining dice rolls
-			//// for each of those, loop over checkers that can be moved to any legal position
-			///// put on a new state for all possible dice moves
-			for (std::vector<unsigned int>::iterator ite = currentGSADTM.m_diceToMove.begin();
-				ite != currentGSADTM.m_diceToMove.end();
-				ite++) {
-				// unsigned int currentDie = *ite;
+		// size of statesToProcess is growing
+		for (int stateInd = 0; stateInd < statesToProcess.size(); ++stateInd) {
+			// we'll grab an unprocessed game state and spawn a number of 
+			// possible resulting game states from it
+			GameStateAndDiceToMove gsadtm(statesToProcess[stateInd]);
 
-				// GameStateAndDiceToMove
+			int diceIndex = 0;
+			for (auto ite = gsadtm.m_diceToMove.begin();ite != gsadtm.m_diceToMove.end();ite++, diceIndex++) {
 
-				for (;;) {
+				unsigned int dieUnderConsideration = *ite;
 
+				GameStateAndDiceToMove considered_gasdtm(gsadtm);
+
+				if (m_playerOnTurn==POS_PLAYER) {
+					int minInitialPosition;
+					int maxInitialPosition;
+					if (considered_gasdtm.m_gameState.board().posPlayerHasCheckersOnBar()) {
+						minInitialPosition = Board::BAR_POSITION;
+						maxInitialPosition = Board::BAR_POSITION;
+					} else {
+						minInitialPosition = 0;
+						maxInitialPosition = Board::BAR_POSITION - 1;
+					}
+					for (int i = minInitialPosition;
+						i <= maxInitialPosition;
+						++i) {
+						if (considered_gasdtm.m_gameState.board().isPosMoveLegal(i, dieUnderConsideration)) {
+						// form new gasdtm from it where that position is moved
+							GameState candidateGameState = considered_gasdtm.m_gameState;
+							candidateGameState.movePosChecker(i, dieUnderConsideration);
+
+						// remove die roll too
+							std::vector<unsigned int> candidateDice = gsadtm.m_diceToMove;
+							candidateDice.erase(candidateDice.begin() + diceIndex);
+
+							GameStateAndDiceToMove candidate_gasdtm(candidateGameState,candidateDice);
+
+						// only add it if it's not already been added
+							if (statesAlreadyAdded.find(candidate_gasdtm) != statesAlreadyAdded.end()) {
+								statesAlreadyAdded.insert(candidate_gasdtm);
+								statesToProcess.push_back(candidate_gasdtm);
+
+								if (candidateDice.size() < minDiceRemaining) {
+									minDiceRemaining = candidateDice.size();
+								}
+							}
+						} 
+					}
+				} else {
+					int minInitialPosition;
+					int maxInitialPosition;
+					if (considered_gasdtm.m_gameState.board().negPlayerHasCheckersOnBar()) {
+						minInitialPosition = Board::BAR_POSITION;
+						maxInitialPosition = Board::BAR_POSITION;
+					} else {
+						minInitialPosition = 0;
+						maxInitialPosition = Board::BAR_POSITION - 1;
+					}
+					for (int i = minInitialPosition;
+						i <= maxInitialPosition;
+						++i) {
+						if (considered_gasdtm.m_gameState.board().isNegMoveLegal(i, dieUnderConsideration)) {
+						// form new gasdtm from it where that position is moved
+							GameState candidateGameState = considered_gasdtm.m_gameState;
+							candidateGameState.moveNegChecker(i, dieUnderConsideration);
+
+						// remove die roll too
+							std::vector<unsigned int> candidateDice = gsadtm.m_diceToMove;
+							candidateDice.erase(candidateDice.begin() + diceIndex);
+
+							GameStateAndDiceToMove candidate_gasdtm(candidateGameState,candidateDice);
+
+						// only add it if it's not already been added
+							if (statesAlreadyAdded.find(candidate_gasdtm) != statesAlreadyAdded.end()) {
+								statesAlreadyAdded.insert(candidate_gasdtm);
+								statesToProcess.push_back(candidate_gasdtm);
+
+								if (candidateDice.size() < minDiceRemaining) {
+									minDiceRemaining = candidateDice.size();
+								}								
+							}
+						} 
+					}				
 				}
+			}
+		}
 
+		// go through set and only take resulting plays where either the game is finished
+		// that is all checkers have been born off, or the the DiceToMove.size() == minDiceRemaining
+		for (int stateInd = 0; stateInd < statesToProcess.size(); ++stateInd) {
+			if (statesToProcess[stateInd].m_diceToMove.size() == minDiceRemaining) {
+				GameState gs = statesToProcess[stateInd].m_gameState;
+				bool gameFinished = m_playerOnTurn == POS_PLAYER ? 
+				(gs.board().positivePipCount()==0) :
+				(gs.board().negativePipCount()==0);
+				gs.setBooleanStates(
+					false,        // not currently doubled 
+			 		gameFinished, // only finished if move results in 0 pip count
+					false,  	  // not first move
+					false);       // not ready for roll
+				result.push_back(statesToProcess[stateInd].m_gameState);
 			}
 		}
 
 	}
+	
+
 
 	return result;
 }
