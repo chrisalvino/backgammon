@@ -6,6 +6,7 @@
 
 #include "zeno_common/defaultdie.h"
 #include "zeno_common/randomplayer.h"
+#include "zeno_common/hittingrandomplayer.h"
 #include "display/terminaldisplay.h"
 #include "game.h"
 #include <iostream>
@@ -21,7 +22,7 @@ int main() {
 	Game game;
 
 	TerminalDisplay display(std::cout);
-	RandomPlayer posPlayer;
+	HittingRandomPlayer posPlayer;
 	RandomPlayer negPlayer;
 
 	//game.setDisplay(&display);
@@ -33,7 +34,7 @@ int main() {
 	
 	for (int i=1;i<10000;++i) {
 		game.play();
-		if (i % 100 == 0) {
+		if (i % 10 == 0) {
 			std::cout << "Pos: " << game.score()[0] << " Neg: " << game.score()[1] << " ppg: " << 
 			game.pointsPerGame() << " +- " << game.standardError() << std::endl;
 		}
