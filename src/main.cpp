@@ -34,21 +34,11 @@ int main() {
 	for (int i=1;i<10000;++i) {
 		game.play();
 		if (i % 100 == 0) {
-			std::cout << "Pos: " << game.score()[0] << 
-			 "(" << (double)game.score()[0] / i << ") Neg: " << game.score()[1] << std::endl;
+			std::cout << "Pos: " << game.score()[0] << " Neg: " << game.score()[1] << " ppg: " << 
+			game.pointsPerGame() << " +- " << game.standardError() << std::endl;
 		}
 	}
-	
-	// std::vector<int> tally;
-	// tally.resize(7);
-	// for (int i=0;i<7;i++) {
-	// 	tally[i] = 0;
-	// }
-// 
-	// for (int i=0;i<100000000;i++) {
-	// 	tally[die.getDieRoll()]++;
-	// }
-// 
+
 	// std::cout << tally[0] << std::endl;
 	// std::cout << tally[1] << std::endl;
 	// std::cout << tally[2] << std::endl;

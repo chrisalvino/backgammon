@@ -39,6 +39,9 @@
     int numPositiveCheckersBornOff() const;
     int numNegativeCheckersBornOff() const;
 
+    bool positiveCheckersInNegativeHomeBoardOrBar() const;
+    bool negativeCheckersInPositiveHomeBoardOrBar() const;
+
     bool movePosChecker(int initialPos, int numPositions);
     bool moveNegChecker(int initialPos, int numPositions);
 
@@ -63,6 +66,7 @@
     static int pipCount(const std::vector<int> &checkers);
     static bool allCheckersInInnerBoard(const std::vector<int> &checkers);
     static bool noCheckersHigherThan(const std::vector<int> &checkers, int position);
+    static bool checkersInOppositeHomeBoardOrBar(const std::vector<int> &checkers);
     static bool isMoveLegal(
         int initialPos, 
         int numPositions, 

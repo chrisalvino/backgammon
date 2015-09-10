@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include "../display/terminaldisplay.h"
 #include "stdlib.h"
 #include "gamestate.h"
@@ -17,6 +18,9 @@ GameState::GameState() :
 m_dice({0,0}),
 m_cubeValue(1),
 m_score({0,0}),
+m_numGames(0),
+m_meanScore(0.0),
+m_squaredSumOfScoreMinusMean(0.0),
 m_playerOnTurn(NEITHER_PLAYER),
 m_cubeOwner(NEITHER_PLAYER),
 m_gameType(GameType::BACKGAMMON),
@@ -36,6 +40,9 @@ m_board(rhs.m_board),
 m_dice(rhs.m_dice),
 m_cubeValue(rhs.m_cubeValue),
 m_score(rhs.m_score),
+m_numGames(rhs.m_numGames),
+m_meanScore(rhs.m_meanScore),
+m_squaredSumOfScoreMinusMean(rhs.m_squaredSumOfScoreMinusMean),
 m_playerOnTurn(rhs.m_playerOnTurn),
 m_cubeOwner(rhs.m_cubeOwner),
 m_gameType(rhs.m_gameType),
@@ -55,6 +62,9 @@ GameState & GameState::operator=(const GameState &rhs) {
 	this->m_dice = rhs.m_dice;
 	this->m_cubeValue = rhs.m_cubeValue;
 	this->m_score = rhs.m_score;
+	this->m_numGames = rhs.m_numGames;
+	this->m_meanScore = rhs.m_meanScore;
+	this->m_squaredSumOfScoreMinusMean = rhs.m_squaredSumOfScoreMinusMean;
 	this->m_playerOnTurn = rhs.m_playerOnTurn;
 	this->m_cubeOwner = rhs.m_cubeOwner;
 	this->m_gameType = rhs.m_gameType;
@@ -71,7 +81,11 @@ bool GameState::operator==(const GameState & rhs) const {
 	m_board == rhs.m_board && 
 	m_dice == rhs.m_dice &&
 	m_cubeValue == rhs.m_cubeValue &&
-	m_score == rhs.m_score &&
+	m_score[0] == rhs.m_score[0] &&
+	m_score[1] == rhs.m_score[1] &&
+	m_numGames == rhs.m_numGames &&
+	m_meanScore == rhs.m_meanScore &&
+	m_squaredSumOfScoreMinusMean == rhs.m_squaredSumOfScoreMinusMean &&
 	m_playerOnTurn == rhs.m_playerOnTurn &&
 	m_cubeOwner == rhs.m_cubeOwner &&
 	m_gameType == rhs.m_gameType &&
@@ -118,6 +132,34 @@ void GameState::setDiceRoll(unsigned int die1, unsigned int die2) {
 	m_dice[0] = die1;
 	m_dice[1] = die2;
 	m_readyForRoll = false;
+}
+
+void GameState::incrementPositiveScore(unsigned int pointsWon) {
+	m_numGames += 1;
+	m_score[POS_PLAYER] += pointsWon;
+	double delta = (double)pointsWon - m_meanScore;
+	m_meanScore += delta / m_numGames;	
+	m_squaredSumOfScoreMinusMean += delta*(pointsWon - m_meanScore);
+}
+
+void GameState::incrementNegativeScore(unsigned int pointsWon) {
+	m_numGames += 1;
+	m_score[NEG_PLAYER] += pointsWon;
+	double delta = -((double)pointsWon) - m_meanScore;
+	m_meanScore += delta / m_numGames;
+	m_squaredSumOfScoreMinusMean += delta*(-((double)pointsWon) - m_meanScore);
+}
+
+double GameState::pointsPerGame() const {
+	return m_meanScore;
+}
+
+double GameState::variance() const {
+	if (m_numGames < 2) {
+		return std::numeric_limits<double>::quiet_NaN();
+	} else {
+		return m_squaredSumOfScoreMinusMean / (m_numGames - 1);
+	}
 }
 
 void GameState::setDiceUnrolled() {
@@ -202,7 +244,11 @@ std::vector<GameState> GameState::possibleMoves() const {
 			false  // not ready for the next players roll
 			);
 		passGameState.setDiceUnrolled();
-		passGameState.m_score[passGameState.m_playerOnTurn == POS_PLAYER ? NEG_PLAYER : POS_PLAYER] += passGameState.m_cubeValue;
+		if(passGameState.m_playerOnTurn == POS_PLAYER) {
+			passGameState.incrementNegativeScore(passGameState.m_cubeValue);
+		} else {
+			passGameState.incrementPositiveScore(passGameState.m_cubeValue);
+		}
 		result.push_back(passGameState);
 
 	} else if (!m_readyForRoll && m_dice[0] == 0) {
@@ -364,10 +410,22 @@ std::vector<GameState> GameState::possibleMoves() const {
 				if (m_playerOnTurn == POS_PLAYER && gs.board().positivePipCount()==0) {
 					gameFinished = true;
 					winner = POS_PLAYER;
+					if (gs.board().numNegativeCheckersBornOff() == 0) {
+						isGammon = true;
+						if (gs.board().negativeCheckersInPositiveHomeBoardOrBar()) {
+							isBackgammon = true;
+						}
+					}					
 				}
 				if (m_playerOnTurn == NEG_PLAYER && gs.board().negativePipCount()==0) {
 					gameFinished = true;
 					winner = NEG_PLAYER;
+					if (gs.board().numPositiveCheckersBornOff() == 0) {
+						isGammon = true;
+						if (gs.board().positiveCheckersInNegativeHomeBoardOrBar()) {
+							isBackgammon = true;
+						}						
+					}						
 				}
 				gs.setBooleanStates(
 					false,        // not currently doubled 
@@ -375,8 +433,12 @@ std::vector<GameState> GameState::possibleMoves() const {
 					false,  	  // not first move
 					false);       // not ready for roll
 				if (gameFinished) {
-					gs.m_score[winner] += gs.m_cubeValue;
-					// TODO: need to account for gammons and backgammons
+					unsigned int wonAmount = gs.m_cubeValue * (1 + (isGammon ? 1 : 0) + (isBackgammon ? 1 : 0));					
+					if(winner == POS_PLAYER) {
+						gs.incrementPositiveScore(wonAmount);
+					} else {
+						gs.incrementNegativeScore(wonAmount);
+					}					
 				}
 				gs.togglePlayerOnTurn();
 				gs.setDiceUnrolled();

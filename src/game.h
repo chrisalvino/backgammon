@@ -25,6 +25,8 @@ namespace zeno {
 		void play();
 		void startNewGame();
 		void move();
+		double pointsPerGame() { return m_gameState.pointsPerGame(); }
+		double standardError() { return sqrt(m_gameState.variance() / m_gameState.numGames()); }
 		std::vector<unsigned int> score() { return m_gameState.score(); }
 
 	private:

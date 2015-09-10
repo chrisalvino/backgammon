@@ -41,10 +41,26 @@ bool Board::operator==(const Board &rhs) const {
 }
 
 void Board::clearBoard() {
-  for(int i=0;i<NUM_POSITIONS;++i) {
+  for (int i=0;i<NUM_POSITIONS;++i) {
     m_boardPos[i] = 0;
     m_boardNeg[i] = 0;
   }
+}
+
+
+bool Board::positiveCheckersInNegativeHomeBoardOrBar() const {
+  return checkersInOppositeHomeBoardOrBar(m_boardPos);
+}
+
+bool Board::negativeCheckersInPositiveHomeBoardOrBar() const { 
+  return checkersInOppositeHomeBoardOrBar(m_boardNeg);
+}
+
+bool Board::checkersInOppositeHomeBoardOrBar(const std::vector<int> &checkers) {
+  for (int i=18;i<NUM_POSITIONS;++i) {
+    if (checkers[i] > 0) return true;
+  }
+  return false;
 }
 
 int Board::numPositiveCheckersOnBoardOrBar() const {

@@ -33,6 +33,8 @@ namespace zeno {
 		void togglePlayerOnTurn() { m_playerOnTurn = oppositePlayer(m_playerOnTurn); };
 		void setDiceUnrolled();
 		void setDiceRoll(unsigned int die1, unsigned int die2);
+		void incrementPositiveScore(unsigned int pointsWon);
+		void incrementNegativeScore(unsigned int pointsWon);
 
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
 		bool isFirstMove() const { return m_firstMove; }
@@ -46,6 +48,9 @@ namespace zeno {
 		bool negPlayerOwnsCube() const { return m_cubeOwner == NEG_PLAYER; }
 		int cubeValue() const { return m_cubeValue; }
 		std::vector<unsigned int> score() const { return m_score; }
+		unsigned int numGames() const { return m_numGames; }
+		double pointsPerGame() const;
+		double variance() const;
 
 		static unsigned int oppositePlayer(unsigned int player);
 		std::vector<GameState> possibleMoves() const;
@@ -78,6 +83,9 @@ namespace zeno {
 		std::vector<unsigned int> m_dice;   // if dice have been rolled
 		int m_cubeValue;
 		std::vector<unsigned int> m_score;
+		unsigned int m_numGames;
+		double m_meanScore;
+		double m_squaredSumOfScoreMinusMean;
 		unsigned int m_playerOnTurn;		// player whose decision it is
 		unsigned int m_cubeOwner;
 		GameType m_gameType;
