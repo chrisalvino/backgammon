@@ -37,7 +37,6 @@ namespace zeno {
 		void incrementNegativeScore(unsigned int pointsWon);
 
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
-		bool isFirstMove() const { return m_firstMove; }
 		bool isReadyForRoll() const { return m_readyForRoll; }
 		const std::vector<unsigned int> & dice() const { return m_dice; }
 		GameType gameType() const { return m_gameType; }
@@ -66,11 +65,9 @@ namespace zeno {
 		void setBooleanStates(
 			bool currentlyDoubled, 
 			bool gameFinished,
-			bool firstMove,
 			bool readyForRoll) {
 			m_currentlyDoubled = currentlyDoubled;
 			m_gameFinished = gameFinished;
-			m_firstMove = firstMove;
 			m_readyForRoll = readyForRoll;
 			if (currentlyDoubled || readyForRoll) {
 				m_dice[0] = 0;
@@ -91,7 +88,6 @@ namespace zeno {
 		GameType m_gameType;
 		bool m_currentlyDoubled;			// it's doubled and waiting for take/pass     
 		bool m_gameFinished;
-		bool m_firstMove;
 		bool m_readyForRoll;				// player has decided to roll
 
 

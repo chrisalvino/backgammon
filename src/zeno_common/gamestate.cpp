@@ -26,7 +26,6 @@ m_cubeOwner(NEITHER_PLAYER),
 m_gameType(GameType::BACKGAMMON),
 m_currentlyDoubled(false),
 m_gameFinished(false),
-m_firstMove(true),
 m_readyForRoll(false) {
 
 }
@@ -48,7 +47,6 @@ m_cubeOwner(rhs.m_cubeOwner),
 m_gameType(rhs.m_gameType),
 m_currentlyDoubled(rhs.m_currentlyDoubled),
 m_gameFinished(rhs.m_gameFinished),
-m_firstMove(rhs.m_firstMove),
 m_readyForRoll(rhs.m_readyForRoll) {
 
 }
@@ -70,7 +68,6 @@ GameState & GameState::operator=(const GameState &rhs) {
 	this->m_gameType = rhs.m_gameType;
 	this->m_currentlyDoubled = rhs.m_currentlyDoubled;
 	this->m_gameFinished = rhs.m_gameFinished;
-	this->m_firstMove = rhs.m_firstMove;
 	this->m_readyForRoll = rhs.m_readyForRoll;
 
 	return *this;
@@ -91,7 +88,6 @@ bool GameState::operator==(const GameState & rhs) const {
 	m_gameType == rhs.m_gameType &&
 	m_currentlyDoubled == rhs.m_currentlyDoubled &&
 	m_gameFinished == rhs.m_gameFinished &&
-	m_firstMove == rhs.m_firstMove &&
 	m_readyForRoll == rhs.m_readyForRoll;
 }
 
@@ -101,7 +97,6 @@ void GameState::initializeBackgammon(unsigned int playerActingFirst, int initial
 	m_cubeValue = initialCubeValue;
 	setBooleanStates(false, // not currently doubled 
 			false, // game not finished
-			true,  // first move
 			true); // ready for roll
 	m_gameType = GameType::BACKGAMMON;
 }
@@ -112,7 +107,6 @@ void GameState::initializeNackgammon(unsigned int playerActingFirst, int initial
 	m_cubeValue = initialCubeValue;
 	setBooleanStates(false, // not currently doubled 
 			false, // game not finished
-			true,  // first move
 			true); // ready for roll	
 	m_gameType = GameType::NACKGAMMON;
 }
@@ -123,7 +117,6 @@ void GameState::initializeHypergammon(unsigned int playerActingFirst, int initia
 	m_cubeValue = initialCubeValue;	
 	setBooleanStates(false, // not currently doubled 
 			false, // game not finished
-			true,  // first move
 			true); // ready for roll	
 	m_gameType = GameType::HYPERGAMMON;
 }
@@ -197,7 +190,7 @@ public:
 	std::vector<unsigned int> m_diceToMove;
 	friend struct std::hash<GameStateAndDiceToMove>;
 	bool operator==(const GameStateAndDiceToMove & rhs) const {
-		return m_gameState == rhs.m_gameState && m_diceToMove == rhs.m_diceToMove;
+		return m_diceToMove == rhs.m_diceToMove && m_gameState == rhs.m_gameState;
 	}
 };
 
@@ -205,8 +198,9 @@ namespace std {
 template<> struct hash<GameStateAndDiceToMove> {
 	size_t operator()(const GameStateAndDiceToMove &gameStateAndDiceToMove) const {
 		size_t retval = std::hash<GameState>()(gameStateAndDiceToMove.m_gameState);
-		for (int i=0;i<gameStateAndDiceToMove.m_diceToMove.size();++i) {
-			retval += 31 * retval + std::hash<unsigned int>()(gameStateAndDiceToMove.m_diceToMove[i]);
+		auto iteEnd = gameStateAndDiceToMove.m_diceToMove.end();
+		for (auto ite = gameStateAndDiceToMove.m_diceToMove.begin(); ite != iteEnd; ++ite) {
+			retval += 31 * retval + std::hash<unsigned int>()(*ite);
 		}
 		return retval;
 	}
@@ -227,7 +221,6 @@ std::vector<GameState> GameState::possibleMoves() const {
 		takeGameState.setBooleanStates(
 			false, // no longer currently doubled
 			false, // game not finished
-			false, // can't possibly be first move
 			true  // ready for the next players roll
 			);
 		takeGameState.setDiceUnrolled();
@@ -240,7 +233,6 @@ std::vector<GameState> GameState::possibleMoves() const {
 		passGameState.setBooleanStates(
 			false, // no longer currently doubled
 			true,  // game finished
-			false, // can't possibly be first move
 			false  // not ready for the next players roll
 			);
 		passGameState.setDiceUnrolled();
@@ -259,7 +251,6 @@ std::vector<GameState> GameState::possibleMoves() const {
 		rollGameState.setBooleanStates(
 			false, // not currently doubled
 			false, // game not finished
-			false, // no longer first move
 			true   // ready for the next players roll
 			);		
 		rollGameState.setDiceUnrolled();
@@ -274,7 +265,6 @@ std::vector<GameState> GameState::possibleMoves() const {
 			doubleOfferedGameState.setBooleanStates(
 			true,  // currently doubled
 			false, // game not finished
-			false, // no longer first move
 			false  // not ready for the next players roll
 			);			
 			doubleOfferedGameState.setDiceUnrolled();
@@ -430,7 +420,6 @@ std::vector<GameState> GameState::possibleMoves() const {
 				gs.setBooleanStates(
 					false,        // not currently doubled 
 			 		gameFinished, // only finished if move results in 0 pip count
-					false,  	  // not first move
 					false);       // not ready for roll
 				if (gameFinished) {
 					unsigned int wonAmount = gs.m_cubeValue * (1 + (isGammon ? 1 : 0) + (isBackgammon ? 1 : 0));					

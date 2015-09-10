@@ -19,7 +19,6 @@ template<> struct hash<zeno::GameState> {
     retval += 31 * retval + std::hash<int>()((int)gameState.m_gameType);
     retval += 31 * retval + std::hash<bool>()(gameState.m_currentlyDoubled);
     retval += 31 * retval + std::hash<bool>()(gameState.m_gameFinished);
-    retval += 31 * retval + std::hash<bool>()(gameState.m_firstMove);
     retval += 31 * retval + std::hash<bool>()(gameState.m_readyForRoll);
     
     return retval;

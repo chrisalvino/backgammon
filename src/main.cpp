@@ -16,7 +16,8 @@
 using namespace zeno;
 
 int main() {
-	srand48 (time (0));
+	//srand48 (time (0));
+	srand48 (12345);
 	DefaultDie die;
 
 	Game game;
@@ -32,11 +33,11 @@ int main() {
 	//game.play();
 
 	
-	for (int i=1;i<10000;++i) {
+	for (int i=1;i<1000;++i) {
 		game.play();
-		if (i % 10 == 0) {
+		if (i % 100 == 0) {
 			std::cout << "Pos: " << game.score()[0] << " Neg: " << game.score()[1] << " ppg: " << 
-			game.pointsPerGame() << " +- " << game.standardError() << std::endl;
+			game.pointsPerGame() << " ±" << game.standardError() << std::endl;
 		}
 	}
 

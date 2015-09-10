@@ -7,10 +7,15 @@ template<> struct hash<zeno::Board> {
     retval += std::hash<int>()(board.m_totalPosCheckers);
     retval += 31 * retval + std::hash<int>()(board.m_totalNegCheckers);
 
-    for (int i=0;i<zeno::Board::NUM_POSITIONS;++i) {
-      retval += 31 * retval + std::hash<int>()(board.m_boardPos[i]);
-      retval += 31 * retval + std::hash<int>()(board.m_boardNeg[i]);
+    auto iteEnd = board.m_boardPos.end();
+    for (auto ite = board.m_boardPos.begin();ite != iteEnd;++ite) {
+      retval += 31 * retval + std::hash<int>()(*ite);
     }
+
+    iteEnd = board.m_boardNeg.end();
+    for (auto ite = board.m_boardNeg.begin();ite != iteEnd;++ite) {
+      retval += 31 * retval + std::hash<int>()(*ite);
+    }    
 
     return retval;
   }
