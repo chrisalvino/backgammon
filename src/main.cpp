@@ -24,12 +24,21 @@ int main() {
 	RandomPlayer posPlayer;
 	RandomPlayer negPlayer;
 
-	game.setDisplay(&display);
+	//game.setDisplay(&display);
 	game.setDie(&die);
 	game.setPlayerPos(&posPlayer);
 	game.setPlayerNeg(&negPlayer);
-	game.play();
+	//game.play();
 
+	
+	for (int i=1;i<10000;++i) {
+		game.play();
+		if (i % 100 == 0) {
+			std::cout << "Pos: " << game.score()[0] << 
+			 "(" << (double)game.score()[0] / i << ") Neg: " << game.score()[1] << std::endl;
+		}
+	}
+	
 	// std::vector<int> tally;
 	// tally.resize(7);
 	// for (int i=0;i<7;i++) {

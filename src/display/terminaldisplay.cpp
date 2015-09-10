@@ -270,8 +270,12 @@ void TerminalDisplay::showBoard(const GameState & gameState) {
 	m_outStream << (posPlayerOnBottom ? posPipCount : negPipCount);
 	m_outStream << " ";
 	// status of player on move
-	if (dice[0] == 0) {
+	if (gameState.isCurrentlyDoubled()) {
+		m_outStream << "Take or Pass cube"; 
+	} else if (dice[0] == 0) {
 		m_outStream << "Roll or Double";
+	} else if (gameState.isGameFinished()) {
+		m_outStream << "Game finished";
 	} else {
 		m_outStream << "Rolled: " << dice[0] << " " << dice[1];
 	}

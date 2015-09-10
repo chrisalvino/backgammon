@@ -1,5 +1,6 @@
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <iostream>
 #include "game.h"
 
@@ -50,17 +51,21 @@ void Game::play() {
 			m_pDisplay->showBoard(m_gameState);
 		}
 
+		//usleep(50000);
 		// get possible game states for player to consider
 		std::vector<GameState> possibleGameStates = m_gameState.possibleMoves();
 
+#if 0
 		for (auto ite = possibleGameStates.begin(); ite != possibleGameStates.end() ; ++ite) {
 			if (m_pDisplay != 0) {
 				m_pDisplay->showBoard(*ite);
 			}
 		}	
-		exit(1);		
+		exit(1);
+#endif	
 
 		GameState newGameState;
+
 		// player chooses from possible game states
 		if (m_gameState.isPositivePlayerOnTurn()) {
 			newGameState = m_pPlayerPos->chooseMove(possibleGameStates);
@@ -68,13 +73,20 @@ void Game::play() {
 			newGameState = m_pPlayerNeg->chooseMove(possibleGameStates);
 		}
 
+		// anything needed for game to update state here
+		if (newGameState.isReadyForRoll()) {
+			int die1 = m_pDie->getDieRoll();
+			int die2 = m_pDie->getDieRoll();		
+			newGameState.setDiceRoll(die1,die2);		
+		}
+
 		// make this the new game state
 		m_gameState = newGameState;
-
-		// anything needed for game to update state here
-		// no-op currently
 	}
 
+	if (m_pDisplay != 0) {
+		m_pDisplay->showBoard(m_gameState);
+	}
 }
 
 void Game::move() {

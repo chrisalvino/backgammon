@@ -42,8 +42,7 @@ m_gameType(rhs.m_gameType),
 m_currentlyDoubled(rhs.m_currentlyDoubled),
 m_gameFinished(rhs.m_gameFinished),
 m_firstMove(rhs.m_firstMove),
-m_readyForRoll(rhs.m_readyForRoll)
-{
+m_readyForRoll(rhs.m_readyForRoll) {
 
 }
 
@@ -121,10 +120,9 @@ void GameState::setDiceRoll(unsigned int die1, unsigned int die2) {
 	m_readyForRoll = false;
 }
 
-void GameState::finalizeMove() {
-	m_firstMove = false; 
+void GameState::setDiceUnrolled() {
 	m_dice[0] = 0;
-	m_dice[1] = 0;	
+	m_dice[1] = 0;
 }
 
 unsigned int GameState::oppositePlayer(unsigned int player) {
@@ -182,28 +180,32 @@ std::vector<GameState> GameState::possibleMoves() const {
 		/////////////////////////////////
 		GameState takeGameState(*this);
 		takeGameState.m_cubeValue *= 2;
+		takeGameState.m_cubeOwner = m_playerOnTurn;
+		takeGameState.m_playerOnTurn = oppositePlayer(m_playerOnTurn);
 		takeGameState.setBooleanStates(
 			false, // no longer currently doubled
 			false, // game not finished
 			false, // can't possibly be first move
-			true   // ready for the next players roll
+			true  // ready for the next players roll
 			);
+		takeGameState.setDiceUnrolled();
 		result.push_back(takeGameState);
 
 	    /////////////////////////////////		
 		//// return pass state (doubling player wins value of cube)
 		/////////////////////////////////
 		GameState passGameState(*this);
-		takeGameState.setBooleanStates(
+		passGameState.setBooleanStates(
 			false, // no longer currently doubled
 			true,  // game finished
 			false, // can't possibly be first move
 			false  // not ready for the next players roll
 			);
+		passGameState.setDiceUnrolled();
 		passGameState.m_score[passGameState.m_playerOnTurn == POS_PLAYER ? NEG_PLAYER : POS_PLAYER] += passGameState.m_cubeValue;
 		result.push_back(passGameState);
 
-	} else if(m_dice[0] == 0 && m_dice[1] == 0) {
+	} else if (!m_readyForRoll && m_dice[0] == 0) {
 	    /////////////////////////////////
 		//// ready for roll
 		/////////////////////////////////		
@@ -214,23 +216,27 @@ std::vector<GameState> GameState::possibleMoves() const {
 			false, // no longer first move
 			true   // ready for the next players roll
 			);		
+		rollGameState.setDiceUnrolled();
 		result.push_back(rollGameState);
 
-	    /////////////////////////////////
-		//// offer a double
-		/////////////////////////////////
-		GameState doubleOfferedGameState(*this);
-		doubleOfferedGameState.setBooleanStates(
+		if (m_cubeOwner != oppositePlayer(m_playerOnTurn)) {
+	    	/////////////////////////////////
+			//// offer a double
+			/////////////////////////////////
+			GameState doubleOfferedGameState(*this);
+			doubleOfferedGameState.togglePlayerOnTurn();
+			doubleOfferedGameState.setBooleanStates(
 			true,  // currently doubled
 			false, // game not finished
 			false, // no longer first move
 			false  // not ready for the next players roll
 			);			
-		// make the cube owner be the other player
-		doubleOfferedGameState.m_cubeOwner = doubleOfferedGameState.m_playerOnTurn == POS_PLAYER ? NEG_PLAYER : POS_PLAYER;
-		result.push_back(doubleOfferedGameState);
+			doubleOfferedGameState.setDiceUnrolled();
+			// make the cube owner be the other player
+			//result.push_back(doubleOfferedGameState);
+		}
 
-	} else {
+	} else if (m_dice[0] != 0) {
 		std::vector<unsigned int> diceToMove;
 		if (m_dice[0] == m_dice[1]) {
 			for (int i=0;i<4;++i) {
@@ -351,15 +357,30 @@ std::vector<GameState> GameState::possibleMoves() const {
 		for (int stateInd = 0; stateInd < statesToProcess.size(); ++stateInd) {
 			if (statesToProcess[stateInd].m_diceToMove.size() == minDiceRemaining) {
 				GameState gs = statesToProcess[stateInd].m_gameState;
-				bool gameFinished = m_playerOnTurn == POS_PLAYER ? 
-				(gs.board().positivePipCount()==0) :
-				(gs.board().negativePipCount()==0);
+				bool gameFinished = false;
+				unsigned int winner = NEITHER_PLAYER;
+				bool isGammon = false;
+				bool isBackgammon = false;
+				if (m_playerOnTurn == POS_PLAYER && gs.board().positivePipCount()==0) {
+					gameFinished = true;
+					winner = POS_PLAYER;
+				}
+				if (m_playerOnTurn == NEG_PLAYER && gs.board().negativePipCount()==0) {
+					gameFinished = true;
+					winner = NEG_PLAYER;
+				}
 				gs.setBooleanStates(
 					false,        // not currently doubled 
 			 		gameFinished, // only finished if move results in 0 pip count
 					false,  	  // not first move
 					false);       // not ready for roll
-				result.push_back(statesToProcess[stateInd].m_gameState);
+				if (gameFinished) {
+					gs.m_score[winner] += gs.m_cubeValue;
+					// TODO: need to account for gammons and backgammons
+				}
+				gs.togglePlayerOnTurn();
+				gs.setDiceUnrolled();
+				result.push_back(gs);
 			}
 		}
 

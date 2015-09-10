@@ -2,6 +2,7 @@
 #ifndef GAME_H__
 #define GAME_H__
 
+#include <vector>
 #include "display/display.h"
 #include "gamestate.h"
 #include "player.h"
@@ -24,6 +25,7 @@ namespace zeno {
 		void play();
 		void startNewGame();
 		void move();
+		std::vector<unsigned int> score() { return m_gameState.score(); }
 
 	private:
 		GameState m_gameState;

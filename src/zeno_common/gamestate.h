@@ -30,25 +30,24 @@ namespace zeno {
 		void movePosChecker(int initialPos, int numPositions);
 		void moveNegChecker(int initialPos, int numPositions);
 
+		void togglePlayerOnTurn() { m_playerOnTurn = oppositePlayer(m_playerOnTurn); };
+		void setDiceUnrolled();
+		void setDiceRoll(unsigned int die1, unsigned int die2);
+
 		bool isPositivePlayerOnTurn() const { return (m_playerOnTurn == POS_PLAYER); }
 		bool isFirstMove() const { return m_firstMove; }
-		void finalizeMove();
-		void togglePlayerOnTurn() { m_playerOnTurn = oppositePlayer(m_playerOnTurn); };
-		static unsigned int oppositePlayer(unsigned int player);
-		void setDiceRoll(unsigned int die1, unsigned int die2);
+		bool isReadyForRoll() const { return m_readyForRoll; }
 		const std::vector<unsigned int> & dice() const { return m_dice; }
-
 		GameType gameType() const { return m_gameType; }
-
 		bool isGameFinished() const { return m_gameFinished; }
-
-		bool isCurrentlyDoubled() { return m_currentlyDoubled; }
-
+		bool isCurrentlyDoubled() const { return m_currentlyDoubled; }
 		bool isCubeCentered() const { return m_cubeOwner == NEITHER_PLAYER; }
 		bool posPlayerOwnsCube() const { return m_cubeOwner == POS_PLAYER; }
 		bool negPlayerOwnsCube() const { return m_cubeOwner == NEG_PLAYER; }
 		int cubeValue() const { return m_cubeValue; }
+		std::vector<unsigned int> score() const { return m_score; }
 
+		static unsigned int oppositePlayer(unsigned int player);
 		std::vector<GameState> possibleMoves() const;
 
 		static const unsigned int POS_PLAYER;
@@ -68,11 +67,15 @@ namespace zeno {
 			m_gameFinished = gameFinished;
 			m_firstMove = firstMove;
 			m_readyForRoll = readyForRoll;
+			if (currentlyDoubled || readyForRoll) {
+				m_dice[0] = 0;
+				m_dice[1] = 0;
+			}
 		}
 
 	private:
 		Board m_board;
-		std::vector<unsigned int> m_dice;
+		std::vector<unsigned int> m_dice;   // if dice have been rolled
 		int m_cubeValue;
 		std::vector<unsigned int> m_score;
 		unsigned int m_playerOnTurn;		// player whose decision it is
