@@ -15,9 +15,14 @@ set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory (zeno_common)
 add_subdirectory (display)
+add_subdirectory (zeno_test)
 
 include_directories (zeno_common)
 include_directories (display)
 
 file(GLOB SOURCE_CPP_FILES "*.cpp")
 add_executable(zeno $<TARGET_OBJECTS:zeno_common> $<TARGET_OBJECTS:display> ${SOURCE_CPP_FILES})
+
+enable_testing()
+add_executable(zenotest $<TARGET_OBJECTS:zeno_common> $<TARGET_OBJECTS:display> $<TARGET_OBJECTS:zeno_test>)
+add_test( bearOffTest zenotest 1 )

@@ -30,8 +30,11 @@
     void setUpBackgammonCheckers();
     void setUpNackgammonCheckers();
     void setUpHypergammonCheckers();
-    int positiveCheckers(int position) const { return m_boardPos[position]; }
-    int negativeCheckers(int position) const { return m_boardNeg[position]; }
+    unsigned char positiveCheckers(int position) const { return m_boardPos[position]; }
+    unsigned char negativeCheckers(int position) const { return m_boardNeg[position]; }
+
+    void setPositiveCheckers(int position, unsigned char number);
+    void setNegativeCheckers(int position, unsigned char number);
 
     int numPositiveCheckersOnBoardOrBar() const;
     int numNegativeCheckersOnBoardOrBar() const;
@@ -63,25 +66,25 @@
      
   private:
     static int opposingPosition(int position) { return ON_BOARD_POSITIONS - 1 - position; };
-    static int pipCount(const std::vector<int> &checkers);
-    static bool allCheckersInInnerBoard(const std::vector<int> &checkers);
-    static bool noCheckersHigherThan(const std::vector<int> &checkers, int position);
-    static bool checkersInOppositeHomeBoardOrBar(const std::vector<int> &checkers);
+    static int pipCount(const std::vector<unsigned char> &checkers);
+    static bool allCheckersInInnerBoard(const std::vector<unsigned char> &checkers);
+    static bool noCheckersHigherThan(const std::vector<unsigned char> &checkers, int position);
+    static bool checkersInOppositeHomeBoardOrBar(const std::vector<unsigned char> &checkers);
     static bool isMoveLegal(
         int initialPos, 
         int numPositions, 
-        const std::vector<int> &checkers, 
-        const std::vector<int> &opponentCheckers);
+        const std::vector<unsigned char> &checkers, 
+        const std::vector<unsigned char> &opponentCheckers);
     static void moveChecker(
         int initialPos,
         int numPositions,
-        std::vector<int> &checkers, 
-        std::vector<int> &opponentCheckers);
+        std::vector<unsigned char> &checkers, 
+        std::vector<unsigned char> &opponentCheckers);
     void clearBoard();
 
   private:
-    std::vector<int> m_boardPos;
-    std::vector<int> m_boardNeg;
+    std::vector<unsigned char> m_boardPos;
+    std::vector<unsigned char> m_boardNeg;
     static const int NUM_POSITIONS;
     int m_totalPosCheckers;
     int m_totalNegCheckers;

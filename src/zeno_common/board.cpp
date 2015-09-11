@@ -1,4 +1,3 @@
-
 #include "board.h"
 
 #include <vector>
@@ -56,7 +55,7 @@ bool Board::negativeCheckersInPositiveHomeBoardOrBar() const {
   return checkersInOppositeHomeBoardOrBar(m_boardNeg);
 }
 
-bool Board::checkersInOppositeHomeBoardOrBar(const std::vector<int> &checkers) {
+bool Board::checkersInOppositeHomeBoardOrBar(const std::vector<unsigned char> &checkers) {
   for (int i=18;i<NUM_POSITIONS;++i) {
     if (checkers[i] > 0) return true;
   }
@@ -87,7 +86,7 @@ int Board::numNegativeCheckersBornOff() const {
   return m_totalNegCheckers - numNegativeCheckersOnBoardOrBar();
 }
 
-int Board::pipCount(const std::vector<int> &checkers) {
+int Board::pipCount(const std::vector<unsigned char> &checkers) {
   int pipCount = 0;
   for(int i=0;i<Board::NUM_POSITIONS;++i) {
     pipCount += checkers[i] * (i+1);
@@ -205,8 +204,8 @@ bool Board::moveNegChecker(int initialPos, int numPositions) {
 void Board::moveChecker(
   int initialPos,
   int numPositions,
-  std::vector<int> &checkers, 
-  std::vector<int> &opponentCheckers) {
+  std::vector<unsigned char> &checkers, 
+  std::vector<unsigned char> &opponentCheckers) {
   checkers[initialPos] -= 1; // take checker off initial position
 
   // now determine target position
@@ -242,8 +241,8 @@ bool Board::isNegMoveLegal(int initialPos, int numPositions) const {
 bool Board::isMoveLegal(
   int initialPosition, 
   int numPositions, 
-  const std::vector<int> &checkers, 
-  const std::vector<int> &opponentCheckers) {
+  const std::vector<unsigned char> &checkers, 
+  const std::vector<unsigned char> &opponentCheckers) {
 
   if (initialPosition < 0) {
     return false;
@@ -310,7 +309,7 @@ bool Board::allNegCheckersInInnerBoard() const {
   return allCheckersInInnerBoard(m_boardNeg);
 }
 
-bool Board::noCheckersHigherThan(const std::vector<int> &checkers, int position) {
+bool Board::noCheckersHigherThan(const std::vector<unsigned char> &checkers, int position) {
   for (int i=position+1;i<NUM_POSITIONS;++i) {
     if (checkers[i] > 0) {
       return false;
@@ -319,6 +318,6 @@ bool Board::noCheckersHigherThan(const std::vector<int> &checkers, int position)
   return true;
 }
 
-bool Board::allCheckersInInnerBoard(const std::vector<int> &checkers) {
+bool Board::allCheckersInInnerBoard(const std::vector<unsigned char> &checkers) {
   return noCheckersHigherThan(checkers, 5);
 }
