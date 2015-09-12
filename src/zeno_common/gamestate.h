@@ -22,6 +22,7 @@ namespace zeno {
 		bool operator==(const GameState & rhs) const;
 
 		const Board & board() const { return m_board; }
+		Board & board() { return m_board; }
 
 		void initializeBackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
 		void initializeNackgammon(unsigned int playerActingFirst, int initialCubeValue = 1);
@@ -30,6 +31,8 @@ namespace zeno {
 		void movePosChecker(int initialPos, int numPositions);
 		void moveNegChecker(int initialPos, int numPositions);
 
+		void setPosPlayerOnTurn() { m_playerOnTurn = POS_PLAYER; }
+		void setNegPlayerOnTurn() { m_playerOnTurn = NEG_PLAYER; }
 		void togglePlayerOnTurn() { m_playerOnTurn = oppositePlayer(m_playerOnTurn); };
 		void setDiceUnrolled();
 		void setDiceRoll(unsigned int die1, unsigned int die2);

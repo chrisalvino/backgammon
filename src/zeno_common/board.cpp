@@ -46,7 +46,6 @@ void Board::clearBoard() {
   }
 }
 
-
 bool Board::positiveCheckersInNegativeHomeBoardOrBar() const {
   return checkersInOppositeHomeBoardOrBar(m_boardPos);
 }

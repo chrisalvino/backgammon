@@ -26,15 +26,16 @@
 
     bool operator==(const Board & rhs) const; 
 
-  public:
+public:
     void setUpBackgammonCheckers();
     void setUpNackgammonCheckers();
     void setUpHypergammonCheckers();
     unsigned char positiveCheckers(int position) const { return m_boardPos[position]; }
     unsigned char negativeCheckers(int position) const { return m_boardNeg[position]; }
 
-    void setPositiveCheckers(int position, unsigned char number);
-    void setNegativeCheckers(int position, unsigned char number);
+    void clearBoard();
+    void setPositiveCheckers(int position, unsigned char number) { m_boardPos[position] = number; }
+    void setNegativeCheckers(int position, unsigned char number) { m_boardNeg[position] = number; }
 
     int numPositiveCheckersOnBoardOrBar() const;
     int numNegativeCheckersOnBoardOrBar() const;
@@ -63,8 +64,8 @@
     friend struct std::hash<Board>;
     static const int BAR_POSITION;
     static const int ON_BOARD_POSITIONS;
-     
-  private:
+    
+private:
     static int opposingPosition(int position) { return ON_BOARD_POSITIONS - 1 - position; };
     static int pipCount(const std::vector<unsigned char> &checkers);
     static bool allCheckersInInnerBoard(const std::vector<unsigned char> &checkers);
@@ -80,15 +81,14 @@
         int numPositions,
         std::vector<unsigned char> &checkers, 
         std::vector<unsigned char> &opponentCheckers);
-    void clearBoard();
 
-  private:
+private:
     std::vector<unsigned char> m_boardPos;
     std::vector<unsigned char> m_boardNeg;
     static const int NUM_POSITIONS;
     int m_totalPosCheckers;
     int m_totalNegCheckers;
-  };
+};
 
 }
 
